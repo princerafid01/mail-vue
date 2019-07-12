@@ -19,6 +19,7 @@
 
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from './store/store'
 
 Vue.use(Router)
 
@@ -63,12 +64,12 @@ const router = new Router({
       // PAGES
       // =============================================================================
           {
-            path: '/pages/login',
+            path: '/login',
             name: 'pageLogin',
             component: () => import('@/views/pages/Login.vue')
           },
           {
-            path: '/pages/error-404',
+            path: '/error-404',
             name: 'pageError404',
             component: () => import('@/views/pages/Error404.vue')
           },
@@ -77,10 +78,26 @@ const router = new Router({
       // Redirect to 404 page, if no match found
       {
         path: '*',
-        redirect: '/pages/error-404'
+        redirect: '/error-404'
       }
     ],
 })
+  router.beforeEach((to, from, next) => {
+
+  if (
+    to.path === "/login" ||
+    store.state.auth.isUserLoggedIn()
+  ) {
+    return next();
+  }
+
+  router.push({ path: '/login', query: { to: to.path } })
+  // Specify the current path as the customState parameter, meaning it
+  // will be returned to the application after auth
+  // auth.login({ target: to.path });
+
+
+});
 
 router.afterEach(() => {
   // Remove initial loading

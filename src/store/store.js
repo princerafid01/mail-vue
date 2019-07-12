@@ -15,6 +15,7 @@ import state from "./state"
 import getters from "./getters"
 import mutations from "./mutations"
 import actions from "./actions"
+import moduleAuth from './auth/moduleAuth.js'
 
 Vue.use(Vuex)
 
@@ -24,5 +25,8 @@ export default new Vuex.Store({
     mutations,
     state,
     actions,
+    modules: {
+      auth: moduleAuth,
+    },
     strict: process.env.NODE_ENV !== 'production'
 })

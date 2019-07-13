@@ -47,9 +47,10 @@ const router = new Router({
             component: () => import('./views/Home.vue')
           },
           {
-            path: '/page2',
-            name: 'page2',
-            component: () => import('./views/Page2.vue')
+            path: '/trips',
+            name: 'trips',
+            meta: {auth: true},
+            component: () => import('./views/trips/Trips.vue')
           },
         ],
       },
@@ -72,7 +73,7 @@ const router = new Router({
           {
             path: '/404',
             name: 'Error404',
-            component: () => import('@/views/pages/Error404.vue')
+            component: () => import('@/views/errors/Error404.vue')
           },
         ]
       },

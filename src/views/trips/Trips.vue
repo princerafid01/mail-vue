@@ -1,0 +1,190 @@
+<template>
+  <vx-card title="All trips">
+    <h6>Number of rows</h6>
+    <v-select style="margin-bottom: -12px !important;" class="md:w-1/6 mb-base" @input="setMax"  v-model="maxItem" :options="options"></v-select>
+    <vs-table  pagination :max-items="maxItem" search :data="users">
+
+      <template slot="thead">
+        <vs-th sort-key="number">Trip #</vs-th>
+        <vs-th sort-key="ship">Ship</vs-th>
+        <vs-th sort-key="type">Type</vs-th>
+        <vs-th sort-key="start_date">Start Date</vs-th>
+        <vs-th sort-key="status">Status</vs-th>
+        <vs-th sort-key="created_by">Created_by</vs-th>
+        <vs-th sort-key="income">Income</vs-th>
+        <vs-th sort-key="expense">Expense</vs-th>
+        <vs-th sort-key="profit">Profit</vs-th>
+        <vs-th >Action</vs-th>
+      </template>
+
+      <template slot-scope="{data}">
+        <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
+
+          <vs-td :data="data[indextr].number">
+            {{data[indextr].number}}
+          </vs-td>
+
+          <vs-td :data="data[indextr].ship">
+            {{data[indextr].ship}}
+          </vs-td>
+
+          <vs-td :data="data[indextr].type">
+            {{data[indextr].type}}
+          </vs-td>
+
+          <vs-td :data="data[indextr].start_date">
+            {{data[indextr].start_date | formatDate}}
+          </vs-td>
+          <vs-td :data="data[indextr].status">
+            {{data[indextr].status}}
+          </vs-td>
+          <vs-td :data="data[indextr].created_by">
+            {{data[indextr].created_by}}
+          </vs-td>
+          <vs-td :data="data[indextr].income">
+            {{data[indextr].income|currency}}
+          </vs-td>
+          <vs-td :data="data[indextr].expense">
+            {{data[indextr].expense|currency}}
+          </vs-td>
+          <vs-td :data="data[indextr].profit">
+            {{data[indextr].profit|currency}}
+          </vs-td>
+          <vs-td :data="data[indextr].id">
+            <vs-dropdown color="success">
+              <vs-button class="btn-drop" type="filled" icon="more_horiz"></vs-button>
+              <vs-dropdown-menu >
+                <vs-dropdown-item @click="addIncome(data[indextr].id)">Add Income</vs-dropdown-item>
+                <vs-dropdown-item @click="addExpense(data[indextr].id)">Add Expense</vs-dropdown-item>
+              </vs-dropdown-menu>
+            </vs-dropdown>
+            <!--{{data[indextr].profit|currency}}-->
+          </vs-td>
+
+        </vs-tr>
+      </template>
+    </vs-table>
+    <div class="demo-alignment">
+      <vs-popup class="holamundo" :title="transactionForm.action" :active.sync="popupActive">
+        <vx-input-group class="mb-base">
+          <datepicker class="text-center" v-model="transactionForm.date"> </datepicker>
+        </vx-input-group>
+        <vx-input-group class="mb-base">
+          <vs-input  label="Details" v-validate="'required'"  name="detail" v-model="transactionForm.detail" placeholder="Detail" />
+          <span class="text-danger text-sm" v-show="errors.has('detail')">{{ errors.first('detail') }}</span>
+        </vx-input-group>
+        <vx-input-group class="mb-base">
+          <vs-input v-validate="'required|numeric'"  name="amount" label="Amount"v-model="transactionForm.amount"  placeholder="Amount" />
+          <span class="text-danger text-sm" v-show="errors.has('amount')">{{ errors.first('amount') }}</span>
+        </vx-input-group>
+        <vs-button type="filled" @click.prevent="submitForm" class="mt-5 block">Save</vs-button>
+
+      </vs-popup>
+    </div>
+  </vx-card>
+</template>
+
+<script>
+  import vSelect from 'vue-select';
+  import Datepicker from 'vuejs-datepicker';
+  export default {
+    data() {
+      return {
+        popupActive: false,
+        transactionForm:{
+          action:'',
+          type:'',
+          trip_id:'',
+          date: new Date(),
+          detail:'',
+          amount:'',
+        },
+        users: [
+
+        ],
+        options: [
+          10,
+          20,
+          50,
+          100
+        ],
+        maxItem: localStorage.getItem('maxItem')? localStorage.getItem('maxItem'): 1,
+      }
+    },
+    methods:{
+      addExpense(tripId){
+        this.transactionForm.action = 'Add Expense';
+        this.transactionForm.type = 'expense';
+        this.transactionForm.trip_id = tripId;
+        this.popupActive = true;
+      },
+      addIncome(tripId){
+        this.transactionForm.action = 'Add Income';
+        this.transactionForm.type = 'income';
+        this.transactionForm.trip_id = tripId;
+        this.popupActive = true;
+      },
+      submitForm() {
+        this.$validator.validateAll().then(result => {
+          if(result) {
+            this.transactionForm.date = this.$options.filters.dateToString(this.transactionForm.date);
+            console.log(this.transactionForm);
+            this.axios.post('transaction/add',this.transactionForm)
+              .then(res => {
+                if (res.data.notify){
+                  this.$vs.notify({
+                    title:res.data.notify.title,
+                    text:res.data.notify.message,
+                    color:res.data.notify.type
+                  })
+                }
+                if (res.data.status == 'success') {
+                  this.popupActive = false;
+                  this.transactionForm = {
+                    action:'',
+                    type:'',
+                    trip_id:'',
+                    date: new Date(),
+                    detail:'',
+                    amount:'',
+                  }
+                }
+                this.update();
+
+              })
+              .catch(error => {
+                if (error.response.status == 422){
+                  console.log(error.response.data.errors);
+                  this.$vs.notify({
+                    title:'Validation error',
+                    text:'Error in your data.Please check your input',
+                    color:'warning'})
+                }
+              });
+          }else{
+            // form have errors
+          }
+        })
+      }
+      ,
+      setMax(){
+        if (this.maxItem < 10)
+          this.maxItem = 10;
+        localStorage.setItem('maxItem',this.maxItem);
+      },
+      update(){
+        this.axios.get('/trips')
+          .then(res => {
+            this.users = res.data;
+          })
+      }
+    },
+    mounted(){
+      this.update();
+    },
+    components: {
+      Datepicker,
+      'v-select': vSelect,
+    }
+  }
+</script>

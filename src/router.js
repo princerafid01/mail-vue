@@ -49,7 +49,10 @@ const router = new Router({
           {
             path: '/trips',
             name: 'trips',
-            meta: {auth: true},
+            meta: {auth: {
+                roles: 'trip_view',
+                forbiddenRedirect: '/403'
+              }},
             component: () => import('./views/trips/Trips.vue')
           },
         ],
@@ -74,6 +77,11 @@ const router = new Router({
             path: '/404',
             name: 'Error404',
             component: () => import('@/views/errors/Error404.vue')
+          },
+          {
+            path: '/403',
+            name: 'Error403',
+            component: () => import('@/views/errors/Error403.vue')
           },
         ]
       },

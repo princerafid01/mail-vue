@@ -54,8 +54,8 @@
             <vs-dropdown color="success">
               <vs-button class="btn-drop" type="filled" icon="more_horiz"></vs-button>
               <vs-dropdown-menu >
-                <vs-dropdown-item @click="addIncome(data[indextr].id)">Add Income</vs-dropdown-item>
-                <vs-dropdown-item @click="addExpense(data[indextr].id)">Add Expense</vs-dropdown-item>
+                <vs-dropdown-item v-if="$auth.check(['income_add'])" @click="addIncome(data[indextr].id)">Add Income</vs-dropdown-item>
+                <vs-dropdown-item v-if="$auth.check(['expense_add'])" @click="addExpense(data[indextr].id)">Add Expense</vs-dropdown-item>
               </vs-dropdown-menu>
             </vs-dropdown>
             <!--{{data[indextr].profit|currency}}-->
@@ -67,7 +67,7 @@
     <div class="demo-alignment">
       <vs-popup class="holamundo" :title="transactionForm.action" :active.sync="popupActive">
         <vx-input-group class="mb-base">
-          <datepicker class="text-center" v-model="transactionForm.date"> </datepicker>
+          <datepicker v-if="$auth.check(['date'])" class="text-center" v-model="transactionForm.date"> </datepicker>
         </vx-input-group>
         <vx-input-group class="mb-base">
           <vs-input  label="Details" v-validate="'required'"  name="detail" v-model="transactionForm.detail" placeholder="Detail" />

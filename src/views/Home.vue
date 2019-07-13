@@ -1,15 +1,15 @@
 <template>
   <div class="vx-row">
 
-      <div v-for="trip in currentTrip" class="vx-col w-full sm:w-1/2 lg:w-1/3 mb-base">
+      <div v-for="trip in currentTrip" v-if="$auth.check(['trip_view'])" class="vx-col w-full sm:w-1/2 lg:w-1/3 mb-base">
         <vx-card>
           <div slot="no-body">
             <img :src="require(`@/assets/images/pages/transport.jpg`)" alt="content-img" class="responsive card-img-top">
           </div>
-          <div class="btn-group flex justify-between flex-wrap mb-2">
-            <vs-button @click="addIncome(trip.id)" style="width: 33.3333%">Add Income</vs-button>
-            <vs-button @click="addExpense(trip.id)" style="width: 33.3333%">Add Expense</vs-button>
-            <vs-button style="width: 33.3333%">Edit Trip</vs-button>
+          <div class="btn-group flex flex-wrap mb-2">
+            <vs-button v-if="$auth.check(['income_add'])" @click="addIncome(trip.id)" style="width: 33.3333%">Add Income</vs-button>
+            <vs-button v-if="$auth.check(['expense_add'])" @click="addExpense(trip.id)" style="width: 33.3333%">Add Expense</vs-button>
+            <vs-button v-if="$auth.check(['trip_edit'])" style="width: 33.3333%">Edit Trip</vs-button>
           </div>
           <div class="demo-alignment">
 
@@ -17,7 +17,7 @@
 
             <vs-popup class="holamundo" :title="transactionForm.action" :active.sync="popupActive">
               <vx-input-group class="mb-base">
-              <datepicker class="text-center" v-model="transactionForm.date"> </datepicker>
+              <datepicker v-if="$auth.check(['date'])" class="text-center" v-model="transactionForm.date"> </datepicker>
               </vx-input-group>
               <vx-input-group class="mb-base">
                 <vs-input  label="Details" v-validate="'required'"  name="detail" v-model="transactionForm.detail" placeholder="Detail" />
@@ -192,6 +192,13 @@
                     text:'Error in your data.Please check your input',
                     color:'warning'})
                 }
+                if (error.response.status == 403){
+                  console.log(error.response.data.errors);
+                  this.$vs.notify({
+                    title:'Unauthorised Access !',
+                    text:'You are not authorized for some information.',
+                    color:'warning'})
+                }
               });
           }else{
             // form have errors
@@ -207,6 +214,22 @@
             this.totalExpense = res.data.total_expense;
             this.totalProfit = res.data.total_profit;
             this.currentTrip = res.data.current_trip;
+          })
+          .catch(error => {
+            if (error.response.status == 422){
+              console.log(error.response.data.errors);
+              this.$vs.notify({
+                title:'Validation error',
+                text:'Error in your data.Please check your input',
+                color:'warning'})
+            }
+            if (error.response.status == 403){
+              console.log(error.response.data.errors);
+              this.$vs.notify({
+                title:'Unauthorised Access !',
+                text:'You are not authorized for some information.',
+                color:'warning'})
+            }
           });
       }
     },

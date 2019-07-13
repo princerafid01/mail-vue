@@ -26,6 +26,7 @@ const state = {
         about: 'Dessert chocolate cake lemon drops jujubes. Biscuit cupcake ice cream bear claw brownie brownie marshmallow.',
         img: 'avatar-s-11.png',
         status: 'online',
+
     },
 
     themePrimaryColor: colors.primary,

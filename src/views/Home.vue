@@ -6,15 +6,36 @@
           <div slot="no-body">
             <img :src="require(`@/assets/images/pages/transport.jpg`)" alt="content-img" class="responsive card-img-top">
           </div>
-          <h5 class="mb-2">{{trip.number}}</h5>
+          <div class="btn-group flex justify-between flex-wrap mb-2">
+            <vs-button @click="addIncome(trip.id)" style="width: 33.3333%">Add Income</vs-button>
+            <vs-button @click="addExpense(trip.id)" style="width: 33.3333%">Add Expense</vs-button>
+            <vs-button style="width: 33.3333%">Edit Trip</vs-button>
+          </div>
+          <div class="demo-alignment">
+
+            <!--<vs-button @click="popupActive=true" color="primary" type="border">Open Default popup</vs-button>-->
+
+            <vs-popup class="holamundo" :title="transactionForm.action" :active.sync="popupActive">
+              <vx-input-group class="mb-base">
+              <datepicker class="text-center" v-model="transactionForm.date"> </datepicker>
+              </vx-input-group>
+              <vx-input-group class="mb-base">
+                <vs-input  label="Details" v-validate="'required'"  name="detail" v-model="transactionForm.detail" placeholder="Detail" />
+                <span class="text-danger text-sm" v-show="errors.has('detail')">{{ errors.first('detail') }}</span>
+              </vx-input-group>
+              <vx-input-group class="mb-base">
+                <vs-input v-validate="'required|numeric'"  name="amount" label="Amount"v-model="transactionForm.amount"  placeholder="Amount" />
+                <span class="text-danger text-sm" v-show="errors.has('amount')">{{ errors.first('amount') }}</span>
+              </vx-input-group>
+              <vs-button type="filled" @click.prevent="submitForm" class="mt-5 block">Save</vs-button>
+
+            </vs-popup>
+          </div>
+
+          <h5 class="mb-2 text-center">{{trip.number}}</h5>
           <div class="vs-component vs-con-table stripe vs-table-primary">
-            <!--<div class="con-tablex vs-table&#45;&#45;content">-->
               <div class="vs-con-tbody vs-table--tbody  ">
                 <table class="vs-table vs-table--tbody-table" style="min-width: 100px !important;">
-                  <!--<colgroup>-->
-                    <!--<col width="20">-->
-                    <!--<col name="col-0">-->
-                  <!--</colgroup>-->
                   <tr class="tr-values vs-table--tr tr-table-state-null">
                     <td class="td vs-table--td">Ship</td>
                     <td class="td vs-table--td">{{trip.ship.name}}</td>
@@ -49,11 +70,6 @@
                   </tr>
                 </table>
               </div>
-          </div>
-
-          <div class="flex justify-between flex-wrap">
-            <vs-button class="mt-4 shadow-lg" type="gradient" color="#7367F0" gradient-color-secondary="#CE9FFC">Download</vs-button>
-            <vs-button class="mt-4" type="border" color="#b9b9b9">View All</vs-button>
           </div>
         </vx-card>
       </div>
@@ -104,6 +120,7 @@
   </div>
 </template>
 <script>
+  import Datepicker from 'vuejs-datepicker';
   export default {
     data(){
       return {
@@ -113,17 +130,91 @@
         totalProfit:'loading',
         totalGExpense:'loading',
         currentTrip:null,
+        popupActive: false,
+        date:new Date(),
+        format: "yyyy-MM-dd",
+        transactionForm:{
+          action:'',
+          type:'',
+          trip_id:'',
+          date: new Date(),
+          detail:'',
+          amount:'',
+        }
+      }
+    },
+    methods:{
+      addExpense(tripId){
+        this.transactionForm.action = 'Add Expense';
+        this.transactionForm.type = 'expense';
+        this.transactionForm.trip_id = tripId;
+        this.popupActive = true;
+      },
+      addIncome(tripId){
+        this.transactionForm.action = 'Add Income';
+        this.transactionForm.type = 'income';
+        this.transactionForm.trip_id = tripId;
+        this.popupActive = true;
+      },
+      submitForm() {
+        this.$validator.validateAll().then(result => {
+          if(result) {
+            this.transactionForm.date = this.$options.filters.dateToString(this.transactionForm.date);
+            console.log(this.transactionForm);
+            this.axios.post('transaction/add',this.transactionForm)
+              .then(res => {
+                if (res.data.notify){
+                  this.$vs.notify({
+                    title:res.data.notify.title,
+                    text:res.data.notify.message,
+                    color:res.data.notify.type
+                  })
+                }
+                if (res.data.status == 'success') {
+                  this.popupActive = false;
+                  this.transactionForm = {
+                    action:'',
+                    type:'',
+                    trip_id:'',
+                    date: new Date(),
+                    detail:'',
+                    amount:'',
+                  }
+                }
+                this.update();
+
+            })
+              .catch(error => {
+                if (error.response.status == 422){
+                  console.log(error.response.data.errors);
+                  this.$vs.notify({
+                    title:'Validation error',
+                    text:'Error in your data.Please check your input',
+                    color:'warning'})
+                }
+              });
+          }else{
+            // form have errors
+          }
+        })
+      }
+      ,
+      update(){
+        this.axios.get('/home')
+          .then(res => {
+            this.totalTrip = res.data.total_trip;
+            this.totalIncome = res.data.total_income;
+            this.totalExpense = res.data.total_expense;
+            this.totalProfit = res.data.total_profit;
+            this.currentTrip = res.data.current_trip;
+          });
       }
     },
     mounted(){
-      this.axios.get('/home')
-        .then(res => {
-          this.totalTrip = res.data.total_trip;
-          this.totalIncome = res.data.total_income;
-          this.totalExpense = res.data.total_expense;
-          this.totalProfit = res.data.total_profit;
-          this.currentTrip = res.data.current_trip;
-        });
+      this.update();
+    },
+    components: {
+      Datepicker
     }
   }
 </script>

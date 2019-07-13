@@ -34,6 +34,11 @@ Vue.filter('time', function(value, is24HrFormat = false) {
 		return hours + ':' + min
 	}
 })
+Vue.filter('dateToString', function (value) {
+  if (value){
+    return moment(value).format('YYYY-MM-DD');
+  }
+})
 Vue.filter('formatDate', function (value) {
   if (value){
     return moment(String(value)).format('DD MMM YYYY');

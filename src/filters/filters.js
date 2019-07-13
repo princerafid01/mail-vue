@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import moment from 'moment'
 
 Vue.filter('capitalize', function (value) {
 	if (!value) return ''
@@ -33,6 +34,14 @@ Vue.filter('time', function(value, is24HrFormat = false) {
 		return hours + ':' + min
 	}
 })
+Vue.filter('formatDate', function (value) {
+  if (value){
+    return moment(String(value)).format('DD MMM YYYY');
+  }
+})
+Vue.filter('currency', function (value) {
+  return parseFloat(value).toFixed(2) + ' Tk.';
+});
 
 Vue.filter('date', function(value, fullDate = false) {
 	value = String(value)

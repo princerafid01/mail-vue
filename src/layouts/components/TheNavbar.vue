@@ -115,8 +115,8 @@
       <!-- USER META -->
       <div class="the-navbar__user-meta flex items-center">
         <div class="text-right leading-tight hidden sm:block">
-          <p class="font-semibold">{{ user_displayName }}</p>
-          <small>Available</small>
+          <p class="font-semibold">{{ $auth.user().name }}</p>
+          <small>{{$auth.user().role.display_name}}</small>
         </div>
         <vs-dropdown vs-custom-content vs-trigger-click class="cursor-pointer">
           <div class="con-img ml-3">

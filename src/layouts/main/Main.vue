@@ -186,6 +186,15 @@ export default {
         BackToTop
     },
     created() {
+      // this.axios.get('/shipsMenu')
+      //   .then(res => {
+      //       if (res.data){
+      //         let i;
+      //         for (i = 0; i < res.data.length; i++) {
+      //           sidebarItems.splice( i+1, 0, res.data[i]);
+      //         }
+      //       }
+      //     });
         this.setSidebarWidth();
         if(this.navbarColor == "#fff" && this.isThemeDark) {
             this.updateNavbarColor("#10163a")

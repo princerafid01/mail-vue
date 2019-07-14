@@ -55,6 +55,30 @@ const router = new Router({
               }},
             component: () => import('./views/trips/Trips.vue')
           },
+          {
+            path: '/income',
+            name: 'Income',
+            meta: {
+              auth: {
+                roles: 'income_view',
+                forbiddenRedirect: '/403'
+              },
+              type:'income'
+            },
+            component: () => import('./views/transaction/Transactions.vue')
+          },
+          {
+            path: '/expense',
+            name: 'Expense',
+            meta: {
+              auth: {
+                roles: 'expense_view',
+                forbiddenRedirect: '/403'
+              },
+              type:'expense'
+            },
+            component: () => import('./views/transaction/Transactions.vue')
+          },
         ],
       },
     // =============================================================================

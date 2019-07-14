@@ -32,4 +32,16 @@ export default [
     slug: "trips",
     icon: "ActivityIcon",
   },
+  {
+    url: "/income",
+    name: "Income",
+    slug: "income",
+    icon: "DollarSignIcon",
+  },
+  {
+    url: "/expense",
+    name: "Expense",
+    slug: "expense",
+    icon: "DollarSignIcon",
+  },
 ]

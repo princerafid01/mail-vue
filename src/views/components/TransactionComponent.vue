@@ -1,61 +1,44 @@
 <template>
-  <vx-card title="All trips">
+  <div>
     <h6>Number of rows</h6>
     <v-select style="margin-bottom: -12px !important;" class="md:w-1/6 mb-base" @input="setMax"  v-model="maxItem" :options="options"></v-select>
-    <vs-table  pagination :max-items="maxItem" search :data="users">
-
+    <vs-table  pagination :max-items="maxItem" search :data="trans">
       <template slot="thead">
-        <vs-th sort-key="number">Trip #</vs-th>
-        <vs-th sort-key="ship">Ship</vs-th>
-        <vs-th sort-key="type">Type</vs-th>
-        <vs-th sort-key="start_date">Start Date</vs-th>
-        <vs-th sort-key="status">Status</vs-th>
+        <vs-th sort-key="created_at">Date</vs-th>
+        <vs-th sort-key="trip">Trip</vs-th>
+        <vs-th sort-key="detail">Detail</vs-th>
+        <vs-th sort-key="amount">Amount</vs-th>
         <vs-th sort-key="created_by">Created_by</vs-th>
-        <vs-th sort-key="income">Income</vs-th>
-        <vs-th sort-key="expense">Expense</vs-th>
-        <vs-th sort-key="profit">Profit</vs-th>
         <vs-th >Action</vs-th>
       </template>
 
       <template slot-scope="{data}">
         <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
 
-          <vs-td :data="data[indextr].number">
-            {{data[indextr].number}}
+          <vs-td :data="data[indextr].created_at">
+            {{data[indextr].created_at | formatDate}}
           </vs-td>
 
-          <vs-td :data="data[indextr].ship">
-            {{data[indextr].ship}}
+          <vs-td :data="data[indextr].trip">
+            {{data[indextr].trip}}
           </vs-td>
 
-          <vs-td :data="data[indextr].type">
-            {{data[indextr].type}}
+          <vs-td :data="data[indextr].detail">
+            {{data[indextr].detail}}
           </vs-td>
 
-          <vs-td :data="data[indextr].start_date">
-            {{data[indextr].start_date | formatDate}}
-          </vs-td>
-          <vs-td :data="data[indextr].status">
-            {{data[indextr].status}}
+          <vs-td :data="data[indextr].amount">
+            {{data[indextr].amount | currency}}
           </vs-td>
           <vs-td :data="data[indextr].created_by">
             {{data[indextr].created_by}}
-          </vs-td>
-          <vs-td :data="data[indextr].income">
-            {{data[indextr].income|currency}}
-          </vs-td>
-          <vs-td :data="data[indextr].expense">
-            {{data[indextr].expense|currency}}
-          </vs-td>
-          <vs-td :data="data[indextr].profit">
-            {{data[indextr].profit|currency}}
           </vs-td>
           <vs-td :data="data[indextr].id">
             <vs-dropdown color="success">
               <vs-button class="btn-drop" type="filled" icon="more_horiz"></vs-button>
               <vs-dropdown-menu >
-                <vs-dropdown-item v-if="$auth.check(['income_add'])" @click="addIncome(data[indextr].id)">Add Income</vs-dropdown-item>
-                <vs-dropdown-item v-if="$auth.check(['expense_add'])" @click="addExpense(data[indextr].id)">Add Expense</vs-dropdown-item>
+                <vs-dropdown-item v-if="$auth.check([type+'_edit'])" @click="edit(data[indextr].id)">Edit</vs-dropdown-item>
+                <vs-dropdown-item v-if="$auth.check([type+'_delete'])" @click="delete(data[indextr].id)">Delete</vs-dropdown-item>
               </vs-dropdown-menu>
             </vs-dropdown>
             <!--{{data[indextr].profit|currency}}-->
@@ -65,7 +48,7 @@
       </template>
     </vs-table>
     <div class="demo-alignment">
-      <vs-popup class="holamundo" :title="transactionForm.action" :active.sync="popupActive">
+      <vs-popup class="holamundo" :title="'Edit '+ type" :active.sync="popupActive">
         <vx-input-group class="mb-base">
           <datepicker v-if="$auth.check(['date'])" class="text-center" v-model="transactionForm.date"> </datepicker>
         </vx-input-group>
@@ -74,32 +57,37 @@
           <span class="text-danger text-sm" v-show="errors.has('detail')">{{ errors.first('detail') }}</span>
         </vx-input-group>
         <vx-input-group class="mb-base">
-          <vs-input v-validate="'required|numeric'"  name="amount" label="Amount"v-model="transactionForm.amount"  placeholder="Amount" />
+          <vs-input v-validate="'required|decimal'"  name="amount" label="Amount"v-model="transactionForm.amount"  placeholder="Amount" />
           <span class="text-danger text-sm" v-show="errors.has('amount')">{{ errors.first('amount') }}</span>
         </vx-input-group>
         <vs-button type="filled" @click.prevent="submitForm" class="mt-5 block">Save</vs-button>
 
       </vs-popup>
     </div>
-  </vx-card>
+  </div>
 </template>
-
 <script>
   import vSelect from 'vue-select';
   import Datepicker from 'vuejs-datepicker';
   export default {
-    data() {
+    props: {
+      type:{
+        type:String,
+        required
+          :
+          true
+      }
+    },
+    data () {
       return {
         popupActive: false,
         transactionForm:{
-          action:'',
-          type:'',
-          trip_id:'',
-          date: new Date(),
+          id:'',
+          date: '',
           detail:'',
           amount:'',
         },
-        users: [
+        trans: [
 
         ],
         options: [
@@ -111,25 +99,12 @@
         maxItem: localStorage.getItem('maxItem')? localStorage.getItem('maxItem'): 10,
       }
     },
-    methods:{
-      addExpense(tripId){
-        this.transactionForm.action = 'Add Expense';
-        this.transactionForm.type = 'expense';
-        this.transactionForm.trip_id = tripId;
-        this.popupActive = true;
-      },
-      addIncome(tripId){
-        this.transactionForm.action = 'Add Income';
-        this.transactionForm.type = 'income';
-        this.transactionForm.trip_id = tripId;
-        this.popupActive = true;
-      },
+    methods: {
       submitForm() {
         this.$validator.validateAll().then(result => {
           if(result) {
             this.transactionForm.date = this.$options.filters.dateToString(this.transactionForm.date);
-            console.log(this.transactionForm);
-            this.axios.post('transaction/add',this.transactionForm)
+            this.axios.post('transaction/'+this.transactionForm.id,this.transactionForm)
               .then(res => {
                 if (res.data.notify){
                   this.$vs.notify({
@@ -141,10 +116,8 @@
                 if (res.data.status == 'success') {
                   this.popupActive = false;
                   this.transactionForm = {
-                    action:'',
-                    type:'',
-                    trip_id:'',
-                    date: new Date(),
+                    id:'',
+                    date: '',
                     detail:'',
                     amount:'',
                   }
@@ -167,17 +140,40 @@
         })
       }
       ,
+      edit(id){
+        this.axios.get('transaction/'+id)
+          .then(res => {
+            this.transactionForm.id = id;
+            this.transactionForm.date = new Date(res.data.created_at);
+            this.transactionForm.detail = res.data.detail;
+            this.transactionForm.amount = res.data.amount;
+            this.popupActive = true;
+          });
+      },
+      delete(id){
+
+      },
       setMax(){
         if (this.maxItem < 10)
           this.maxItem = 10;
         localStorage.setItem('maxItem',this.maxItem);
       },
       update(){
-        this.axios.get('/trips')
+        this.axios.get('/transaction/list', {
+          params: {
+            'type':this.type
+          }
+        })
           .then(res => {
-            this.users = res.data;
+            this.trans = res.data;
           })
       }
+    },
+    watch: {
+      '$route'(to, from){
+        this.type = to.meta.type
+        this.update();
+      },
     },
     mounted(){
       this.update();

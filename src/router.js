@@ -65,7 +65,7 @@ const router = new Router({
               },
               type:'income'
             },
-            component: () => import('./views/transaction/Transactions.vue')
+            component: () => import('./views/transaction/Transaction.vue')
           },
           {
             path: '/expense',
@@ -77,7 +77,19 @@ const router = new Router({
               },
               type:'expense'
             },
-            component: () => import('./views/transaction/Transactions.vue')
+            component: () => import('./views/transaction/Transaction.vue')
+          },
+          {
+            path: '/gexpense',
+            name: 'General Expense',
+            meta: {
+              auth: {
+                roles: 'gexpense_view',
+                forbiddenRedirect: '/403'
+              },
+              type:'gexpense'
+            },
+            component: () => import('./views/transaction/Transaction.vue')
           },
         ],
       },

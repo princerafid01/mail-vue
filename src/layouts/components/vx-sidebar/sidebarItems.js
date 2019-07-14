@@ -44,4 +44,10 @@ export default [
     slug: "expense",
     icon: "DollarSignIcon",
   },
+  {
+    url: "/gexpense",
+    name: "General Expense",
+    slug: "gexpense",
+    icon: "DollarSignIcon",
+  },
 ]

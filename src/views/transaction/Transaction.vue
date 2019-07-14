@@ -1,5 +1,5 @@
 <template>
-  <vx-card :title="'All '+type">
+  <vx-card :title="'All '+pageTitle">
     <app-transaction :type="type"></app-transaction>
   </vx-card>
 </template>
@@ -9,6 +9,11 @@
     data (){
       return {
         type:this.$route.meta.type,
+      }
+    },
+    computed:{
+      pageTitle (){
+        return this.type == 'gexpense'? 'General Expense': this.type;
       }
     },
     watch:{

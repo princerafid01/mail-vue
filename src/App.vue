@@ -60,3 +60,13 @@ export default {
 }
 
 </script>
+<style>
+  .floating-btn {
+    position: fixed !important;
+    bottom: 5%;
+    right: 79px;
+    z-index: 51000;
+    -webkit-box-shadow: 0 1px 20px 1px #fb434f;
+    box-shadow: 0 1px 20px 1px #fb434f;
+  }
+</style>

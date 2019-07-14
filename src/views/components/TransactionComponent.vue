@@ -4,7 +4,7 @@
 
       <vs-collapse-item :open="mindex == 0" v-for="(monthly, mindex) in monthlyData">
         <div slot="header">
-          {{monthly.month}} - {{monthly.total | currency}}
+          {{monthly.month}} - {{monthly.total | currency}} <vs-button @click="print(mindex)" style="float: right" type="gradient">Print</vs-button>
         </div>
         <h6>Number of rows</h6>
         <v-select style="margin-bottom: -12px !important;" class="md:w-1/6 mb-base" @input="setMax"  v-model="maxItem" :options="options"></v-select>
@@ -133,11 +133,17 @@
 
       </vs-popup>
     </div>
+    <div class="demo-alignment">
+      <vs-popup class="holamundo" fullscreen title="Print" :active.sync="printExpense">
+          <monthly-expense-print-view v-if="printExpense" :data="printData"></monthly-expense-print-view>
+      </vs-popup>
+    </div>
       <vs-button v-if="type=='gexpense'" @click="addGexpenseForm" class="floating-btn" color="success" type="gradient" icon-pack="feather" icon="icon-plus"></vs-button>
   </div>
 </template>
 <script>
   import vSelect from 'vue-select';
+  import MonthlyExpensePrintView from '../components/MonthlyExpensePrintView'
   import Datepicker from 'vuejs-datepicker';
   export default {
     props: {
@@ -150,6 +156,8 @@
     },
     data () {
       return {
+        printExpense:false,
+        printData:[],
         popupActive: false,
         deleteConfirmation:false,
         deleteId:'',
@@ -179,6 +187,10 @@
       }
     },
     methods: {
+      print(index){
+          this.printExpense = true;
+          this.printData = this.monthlyData[index];
+      },
       submitForm() {
         this.$validator.validateAll().then(result => {
           if(result) {
@@ -343,6 +355,7 @@
     components: {
       Datepicker,
       'v-select': vSelect,
+      MonthlyExpensePrintView
     }
   }
 </script>

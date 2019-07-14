@@ -69,4 +69,18 @@ export default {
     -webkit-box-shadow: 0 1px 20px 1px #fb434f;
     box-shadow: 0 1px 20px 1px #fb434f;
   }
+  @media print {
+    body * {
+      visibility: hidden;
+    }
+    #section-to-print, #section-to-print * {
+      visibility: visible;
+    }
+    #section-to-print {
+      position: absolute;
+      left: 0;
+      top: 0;
+      size: A4;
+    }
+  }
 </style>

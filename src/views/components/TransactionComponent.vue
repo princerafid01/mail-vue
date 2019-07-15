@@ -216,15 +216,6 @@
                 this.update();
 
               })
-              .catch(error => {
-                if (error.response.status == 422){
-                  console.log(error.response.data.errors);
-                  this.$vs.notify({
-                    title:'Validation error',
-                    text:'Error in your data.Please check your input',
-                    color:'warning'})
-                }
-              });
           }else{
             // form have errors
           }

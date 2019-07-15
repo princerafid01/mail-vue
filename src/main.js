@@ -68,33 +68,6 @@ import VueAuth from '@websanova/vue-auth'
 
 Vue.use(VueAxios, axios)
 axios.defaults.baseURL = 'http://laravel.localhost.com/api';
-// axios.interceptors.response.use(function (response) {
-//   return response;
-// }, function (error) {
-//   if (error.response.status == 422){
-//     this.$vs.notify({
-//       title:'Validation error',
-//       text:'Error in your data.Please check your input',
-//       color:'warning'})
-//   } else if (error.response.status == 403){
-//     this.$vs.notify({
-//       title:'Unauthorised Access !',
-//       text:'You are not authorized for some information.',
-//       color:'danger'})
-//   } else if (error.response.status == 404){
-//     this.$vs.notify({
-//       title:'Not found !',
-//       text:'Requested information not found',
-//       color:'warning'})
-//   } else {
-//     this.$vs.notify({
-//       title:'Some thing went wrong',
-//       text:'Request was not succesful',
-//       color:'warning'})
-//   }
-//   console.log(error.response);
-//   return Promise.reject(error);
-// });
 Vue.router  = router;
 Vue.use(VueAuth, {
   auth: require('@websanova/vue-auth/drivers/auth/bearer.js'),
@@ -107,5 +80,35 @@ Vue.config.productionTip = false
 new Vue({
     router,
     store,
-    render: h => h(App)
+    render: h => h(App),
+  mounted(){
+      const notify = this.$vs.notify;
+    this.axios.interceptors.response.use(function (response) {
+      return response;
+    }, function (error) {
+      if (error.response.status == 422){
+        notify ({
+          title:'Validation error',
+          text:'Error in your data.Please check your input',
+          color:'warning'})
+      } else if (error.response.status == 403){
+        notify ({
+          title:'Unauthorised Access !',
+          text:'You are not authorized for some information.',
+          color:'danger'})
+      } else if (error.response.status == 404){
+        notify ({
+          title:'Not found !',
+          text:'Requested information not found',
+          color:'warning'})
+      } else {
+        notify ({
+          title:'Some thing went wrong',
+          text:'Request was not succesful',
+          color:'warning'})
+      }
+      console.log(error.response);
+      return Promise.reject(error);
+    });
+  }
 }).$mount('#app')

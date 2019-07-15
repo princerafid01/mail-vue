@@ -184,22 +184,6 @@
                 this.update();
 
             })
-              .catch(error => {
-                if (error.response.status == 422){
-                  console.log(error.response.data.errors);
-                  this.$vs.notify({
-                    title:'Validation error',
-                    text:'Error in your data.Please check your input',
-                    color:'warning'})
-                }
-                if (error.response.status == 403){
-                  console.log(error.response.data.errors);
-                  this.$vs.notify({
-                    title:'Unauthorised Access !',
-                    text:'You are not authorized for some information.',
-                    color:'warning'})
-                }
-              });
           }else{
             // form have errors
           }
@@ -215,22 +199,6 @@
             this.totalProfit = res.data.total_profit;
             this.currentTrip = res.data.current_trip;
           })
-          .catch(error => {
-            if (error.response.status == 422){
-              console.log(error.response.data.errors);
-              this.$vs.notify({
-                title:'Validation error',
-                text:'Error in your data.Please check your input',
-                color:'warning'})
-            }
-            if (error.response.status == 403){
-              console.log(error.response.data.errors);
-              this.$vs.notify({
-                title:'Unauthorised Access !',
-                text:'You are not authorized for some information.',
-                color:'warning'})
-            }
-          });
       }
     },
     mounted(){

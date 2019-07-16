@@ -1,0 +1,169 @@
+<template>
+  <vs-row>
+    <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
+      <h2 class="text-center">Noble Navigation and Shipping Line</h2>
+    </vs-col>
+    <vs-col vs-type="flex" vs-justify="center" class="mb-2" vs-align="center" vs-w="12">
+      <h4 class="text-center">{{tripData.number}}</h4>
+    </vs-col>
+    <vs-col class="mb-2" vs-w="12">
+      <hr/>
+    </vs-col>
+
+    <vs-col  vs-w="6">
+      <table >
+        <tr>
+          <td><b class="uppercase strong black-text">Ship</b></td>
+          <td>{{tripData.ship.name}}</td>
+        </tr>
+        <tr>
+          <td><b class="uppercase strong black-text">Trip Number</b></td>
+          <td>{{tripData.number}}</td>
+        </tr>
+        <tr>
+          <td><b class="uppercase strong black-text">Cargo</b></td>
+          <td>{{tripData.cargo?tripData.cargo:'NA'}}</td>
+        </tr>
+        <tr>
+          <td><b class="uppercase strong black-text">Cargo Quantity</b></td>
+          <td>{{tripData.cargo_quantity?tripData.cargo_quantity:'NA'}}</td>
+        </tr>
+        <tr>
+          <td><b class="uppercase strong black-text">Total Fuel</b></td>
+          <td>{{tripData.total_fuel?tripData.total_fuel:'NA'}}</td>
+        </tr>
+        <tr>
+          <td><b class="uppercase strong black-text">From</b></td>
+          <td>{{tripData.from?tripData.from:'NA'}}</td>
+        </tr>
+        <tr>
+          <td><b class="uppercase strong black-text">To</b></td>
+          <td>{{tripData.to?tripData.to:'NA'}}</td>
+        </tr>
+        <tr>
+          <td><b class="uppercase strong black-text">Status</b></td>
+          <td>{{tripData.status}}</td>
+        </tr>
+      </table>
+    </vs-col>
+    <vs-col  vs-w="6">
+      <table>
+        <tr>
+          <td><b class="uppercase strong black-text">Loading Date</b></td>
+          <td>{{tripData.start_date | formatDate}}</td>
+        </tr>
+        <tr>
+          <td><b class="uppercase strong black-text">Sailing Date</b></td>
+          <td>{{tripData.sailing_start | formatDate}}</td>
+        </tr>
+        <tr>
+          <td><b class="uppercase strong black-text">Sailing End Date</b></td>
+          <td>{{tripData.sailing_end | formatDate}}</td>
+        </tr>
+        <tr>
+          <td><b class="uppercase strong black-text">Trip End Date</b></td>
+          <td>{{tripData.end_date | formatDate}}</td>
+        </tr>
+        <tr>
+          <td><b class="uppercase strong black-text">Trip Duration</b></td>
+          <td>{{tripData.duration}} days</td>
+        </tr>
+        <tr>
+          <td><b class="uppercase strong black-text">Type</b></td>
+          <td>{{tripData.type}}</td>
+        </tr>
+      </table>
+    </vs-col>
+    <vs-col  vs-w="6">
+      <h3 style="border-bottom: 1px solid black" class="mt-2">Expenses</h3>
+      <table v-if="tripData.expense !=0">
+          <thead>
+          <tr>
+            <th>Date</th>
+            <th>Detail</th>
+            <th>Amount</th>
+          </tr>
+          </thead>
+        <tbody>
+        <tr v-for="ex in tripData.expenses">
+          <td>{{ex.created_at | formatDate}}</td>
+          <td>{{ex.detail}}</td>
+          <td>{{ex.amount | currency}}</td>
+        </tr>
+        <tr>
+          <td colspan="2"></td>
+          <td>Total = {{tripData.expense | currency}}</td>
+        </tr>
+        </tbody>
+      </table>
+      <p v-else class="text-center">No Expense</p>
+    </vs-col>
+    <vs-col  vs-w="6">
+      <h3 style="border-bottom: 1px solid black" class="mt-2">Incomes</h3>
+      <table v-if="tripData.income != 0">
+        <thead>
+        <tr>
+          <th>Date</th>
+          <th>Detail</th>
+          <th>Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="ex in tripData.incomes">
+          <td>{{ex.created_at | formatDate}}</td>
+          <td>{{ex.detail}}</td>
+          <td>{{ex.amount | currency}}</td>
+        </tr>
+        <tr>
+          <td colspan="2"></td>
+          <td>Total = {{tripData.income | currency}}</td>
+        </tr>
+        </tbody>
+      </table>
+      <p v-else class="text-center">No Income</p>
+    </vs-col>
+    <vs-col vs-w="12">
+      <hr>
+    </vs-col>
+    <vs-col vs-offset="6"  vs-w="6">
+
+      <table >
+        <tbody>
+          <tr >
+            <td>Total Income</td>
+            <td>{{tripData.income | currency}}</td>
+          </tr>
+          <tr >
+            <td>Total Expense</td>
+            <td>{{tripData.expense | currency}}</td>
+          </tr>
+          <tr >
+            <td>Profit</td>
+            <td>{{tripData.profit | currency}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </vs-col>
+  </vs-row>
+</template>
+<script>
+  export default {
+    props:['tripData']
+  }
+</script>
+<style scoped>
+  table, td, th {
+  border: 1px solid black;
+  }
+
+  table {
+  border-collapse: collapse;
+  width: 100%;
+    margin: 10px 0px 10px 0px;
+  }
+
+  th, td {
+  /*text-align: center;*/
+    padding: 5px;
+  }
+</style>

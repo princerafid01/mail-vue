@@ -54,6 +54,7 @@
             <vs-dropdown color="success">
               <vs-button class="btn-drop" type="filled" icon="more_horiz"></vs-button>
               <vs-dropdown-menu >
+                <vs-dropdown-item v-if="$auth.check(['income_add'])" @click="showTripFn(data[indextr].id)">View</vs-dropdown-item>
                 <vs-dropdown-item v-if="$auth.check(['income_add'])" @click="addIncome(data[indextr].id)">Add Income</vs-dropdown-item>
                 <vs-dropdown-item v-if="$auth.check(['expense_add'])" @click="addExpense(data[indextr].id)">Add Expense</vs-dropdown-item>
               </vs-dropdown-menu>
@@ -81,15 +82,25 @@
 
       </vs-popup>
     </div>
+    <div class="demo-alignment">
+      <vs-popup class="holamundo" fullscreen title="View Trip" :active.sync="showTrip">
+        <div id="section-to-print">
+          <trip-view :tripData="tripData" v-if="tripData"></trip-view>
+        </div>
+      </vs-popup>
+    </div>
   </vx-card>
 </template>
 
 <script>
   import vSelect from 'vue-select';
   import Datepicker from 'vuejs-datepicker';
+  import TripView from '../components/TripView';
   export default {
     data() {
       return {
+        showTrip:false,
+        tripData:null,
         popupActive: false,
         transactionForm:{
           action:'',
@@ -112,6 +123,13 @@
       }
     },
     methods:{
+      showTripFn(tripId){
+          this.axios.get('trip/'+tripId)
+            .then(res => {
+              this.tripData = res.data;
+              this.showTrip = true;
+            })
+      },
       addExpense(tripId){
         this.transactionForm.action = 'Add Expense';
         this.transactionForm.type = 'expense';
@@ -185,6 +203,7 @@
     components: {
       Datepicker,
       'v-select': vSelect,
+      'trip-view':TripView
     }
   }
 </script>

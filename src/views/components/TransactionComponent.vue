@@ -40,7 +40,7 @@
                 {{data[indextr].created_by}}
               </vs-td>
               <vs-td :data="data[indextr].id">
-                <vs-dropdown color="success">
+                <vs-dropdown color="success" style="cursor: pointer" vs-trigger-click>
                   <vs-button class="btn-drop" type="filled" icon="more_horiz"></vs-button>
                   <vs-dropdown-menu >
                     <vs-dropdown-item v-if="$auth.check([type+'_edit'])" @click="edit(data[indextr].id)">Edit</vs-dropdown-item>
@@ -90,7 +90,7 @@
               {{data[indextr].created_by}}
             </vs-td>
             <vs-td :data="data[indextr].id">
-              <vs-dropdown color="success">
+              <vs-dropdown color="success" style="cursor: pointer" vs-trigger-click>
                 <vs-button class="btn-drop" type="filled" icon="more_horiz"></vs-button>
                 <vs-dropdown-menu >
                   <vs-dropdown-item v-if="$auth.check([type+'_edit'])" @click="edit(data[indextr].id)">Edit</vs-dropdown-item>

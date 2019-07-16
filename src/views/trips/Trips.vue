@@ -10,7 +10,7 @@
         <vs-th sort-key="type">Type</vs-th>
         <vs-th sort-key="start_date">Start Date</vs-th>
         <vs-th sort-key="status">Status</vs-th>
-        <vs-th sort-key="created_by">Created_by</vs-th>
+        <vs-th sort-key="created_by">Created by</vs-th>
         <vs-th sort-key="income">Income</vs-th>
         <vs-th sort-key="expense">Expense</vs-th>
         <vs-th sort-key="profit">Profit</vs-th>
@@ -51,22 +51,23 @@
             {{data[indextr].profit|currency}}
           </vs-td>
           <vs-td :data="data[indextr].id">
-            <vs-dropdown color="success">
+            <vs-dropdown color="success" style="cursor: pointer" vs-trigger-click>
               <vs-button class="btn-drop" type="filled" icon="more_horiz"></vs-button>
               <vs-dropdown-menu >
                 <vs-dropdown-item v-if="$auth.check(['income_add'])" @click="showTripFn(data[indextr].id)">View</vs-dropdown-item>
                 <vs-dropdown-item v-if="$auth.check(['income_add'])" @click="addIncome(data[indextr].id)">Add Income</vs-dropdown-item>
                 <vs-dropdown-item v-if="$auth.check(['expense_add'])" @click="addExpense(data[indextr].id)">Add Expense</vs-dropdown-item>
+                <vs-dropdown-item v-if="$auth.check(['income_edit'])" @click="editTrip(data[indextr].id)">Edit</vs-dropdown-item>
+                <vs-dropdown-item divider v-if="$auth.check(['income_delete'])" @click="deleteTrip(data[indextr].id)">Delete</vs-dropdown-item>
               </vs-dropdown-menu>
             </vs-dropdown>
-            <!--{{data[indextr].profit|currency}}-->
           </vs-td>
 
         </vs-tr>
       </template>
     </vs-table>
     <div class="demo-alignment">
-      <vs-popup class="holamundo" :title="transactionForm.action" :active.sync="popupActive">
+      <vs-popup class="holamundo" v-if="popupActive" :title="transactionForm.action" :active.sync="popupActive">
         <vx-input-group class="mb-base">
           <datepicker v-if="$auth.check(['date'])" class="text-center" v-model="transactionForm.date"> </datepicker>
         </vx-input-group>
@@ -89,6 +90,73 @@
         </div>
       </vs-popup>
     </div>
+    <div  class="demo-alignment">
+      <vs-popup class="holamundo" v-if="showForm"  fullscreen :title="action" :active.sync="showForm">
+        <form>
+          <div class="vx-row">
+            <div class="vx-col md:w-1/4">
+              <div class="select_input">
+              <label class="vs-input--label">Ship</label>
+              <v-select class="select_input" :disabled="disabled" v-model="selectedShip" :clearable="false" :options="[{id: 1, label: 'Hasan Hamim 1'},{id: 2, label: 'Hasan Hamim 3'}]"></v-select>
+              </div>
+            </div>
+            <div class="vx-col md:w-1/4">
+              <vs-input  label="From" v-validate="'required'" placeholder="From" name="from" v-model="trip.from" class="mt-5 w-full" />
+              <span class="text-danger text-sm"  v-show="errors.has('from')">{{ errors.first('from') }}</span>
+            </div>
+
+            <div class="vx-col md:w-1/4">
+              <vs-input label="To" v-validate="'required'" placeholder="To" name="to" v-model="trip.to" class="mt-5 w-full" />
+              <span class="text-danger text-sm" v-show="errors.has('to')">{{ errors.first('to') }}</span>
+            </div>
+
+            <div class="vx-col md:w-1/4">
+              <label class="vs-input--label">Loading Start</label>
+              <datepicker class="text-center" input-class="vs-inputx vs-input--input normal" wrapper-class="vs-component vs-con-input-label vs-input mt-5 w-full vs-input-primary"  v-model="trip.start_date"> </datepicker>
+            </div>
+            <div class="vx-col md:w-1/4">
+              <label class="vs-input--label">Sailing Start</label>
+              <datepicker class="text-center" input-class="vs-inputx vs-input--input normal" wrapper-class="vs-component vs-con-input-label vs-input mt-5 w-full vs-input-primary"  v-model="trip.sailing_start"> </datepicker>
+            </div>
+            <div class="vx-col md:w-1/4">
+              <label class="vs-input--label">Sailing end</label>
+              <datepicker class="text-center" input-class="vs-inputx vs-input--input normal" wrapper-class="vs-component vs-con-input-label vs-input mt-5 w-full vs-input-primary"  v-model="trip.sailing_end"> </datepicker>
+            </div>
+            <div class="vx-col md:w-1/4">
+              <label class="vs-input--label">Discharging End</label>
+              <datepicker class="text-center" input-class="vs-inputx vs-input--input normal" wrapper-class="vs-component vs-con-input-label vs-input mt-5 w-full vs-input-primary"  v-model="trip.end_date"> </datepicker>
+            </div>
+            <div class="vx-col md:w-1/4">
+              <vs-input label="Cargo"  placeholder="To" name="cargo" v-model="trip.cargo" class="mt-5 w-full" />
+              <span class="text-danger text-sm" v-show="errors.has('cargo')">{{ errors.first('cargo') }}</span>
+            </div>
+            <div class="vx-col md:w-1/4">
+              <vs-input label="Cargo quantity"  placeholder="To" name="cargo" v-model="trip.cargo_quantity" class="mt-5 w-full" />
+              <span class="text-danger text-sm" v-show="errors.has('cargo_quantity')">{{ errors.first('cargo_quantity') }}</span>
+            </div>
+            <div class="vx-col md:w-1/4">
+              <vs-input label="Total Fuel"  placeholder="Total Fuel" name="cargo" v-model="trip.total_fuel" class="mt-5 w-full" />
+              <span class="text-danger text-sm" v-show="errors.has('total_fuel')">{{ errors.first('total_fuel') }}</span>
+            </div>
+            <div class="vx-col md:w-1/4">
+              <div class="select_input">
+              <label class="vs-input--label">Type</label>
+              <v-select class="select_input" v-model="selectedType" :clearable="false" :options="['Single', 'Double']"></v-select>
+              </div>
+            </div>
+            <div class="vx-col md:w-1/4">
+              <div class="select_input">
+                <label class="vs-input--label">Ship</label>
+                <v-select class="select_input" v-model="selectedStatus" :clearable="false" :options="['Loading', 'Sailing', 'Discharging', 'Completed']"></v-select>
+              </div>
+            </div>
+          </div>
+
+          <vs-button type="filled" @click.prevent="submitTripForm" class="mt-5 block">Submit</vs-button>
+        </form>
+      </vs-popup>
+    </div>
+    <vs-button @click="addTrip" class="floating-btn" color="success" type="gradient" icon-pack="feather" icon="icon-plus"></vs-button>
   </vx-card>
 </template>
 
@@ -99,8 +167,29 @@
   export default {
     data() {
       return {
+        disabled:false,
+        selectedShip:{id:1, label:'Hasan Hamim 1'},
+        selectedType:'Single',
+        selectedStatus:"Loading",
         showTrip:false,
+        showForm:false,
         tripData:null,
+        trip:{
+          trip_id:'',
+          ship_id:'',
+          from:'',
+          to:'',
+          start_date:'',
+          sailing_start:'',
+          sailing_end:'',
+          end_date:'',
+          cargo:'',
+          cargo_quantity:'',
+          total_fuel:'',
+          type:'',
+          status:''
+        },
+        action:'Add Trip',
         popupActive: false,
         transactionForm:{
           action:'',
@@ -123,6 +212,101 @@
       }
     },
     methods:{
+      editTrip(tripId){
+        this.action = 'Edit trip';
+        this.disabled = true;
+        this.axios.get('trip/'+tripId)
+          .then(res => {
+            let d = res.data;
+            this.selectedShip = d.ship_id == 1?{id:1, label:'Hasan Hamim 1'}:{id:2, label:'Hasan Hamim 3'};
+            this.selectedStatus = d.status;
+            this.selectedType = d.type;
+            this.trip.trip_id = d.id;
+            this.trip.ship_id = d.ship_id;
+            this.trip.from = d.from;
+            this.trip.to = d.to;
+            this.trip.start_date = d.start_date? new Date(d.start_date):'';
+            this.trip.sailing_start = d.sailing_start? new Date(d.sailing_start):'';
+            this.trip.sailing_end= d.sailing_end? new Date(d.sailing_end):'';
+            this.trip.end_date = d.end_date? new Date(d.end_date):'';
+            this.trip.cargo = d.cargo;
+            this.trip.cargo_quantity = d.cargo_quantity;
+            this.trip.total_fuel = d.total_fuel;
+            this.showForm = true;
+          })
+      },
+
+      deleteTrip(){
+
+      },
+      addTrip(){
+          this.action = 'Add trip';
+          this.disabled = false;
+          this.trip = {
+            trip_id:'',
+            ship_id:'',
+            from:'',
+            to:'',
+            start_date:'',
+            sailing_start:'',
+            sailing_end:'',
+            end_date:'',
+            cargo:'',
+            cargo_quantity:'',
+            total_fuel:'',
+            type:'',
+            status:''
+          }
+          this.selectedShip={id:1, label:'Hasan Hamim 1'};
+          this.selectedType='Single';
+          this.selectedStatus="Loading";
+          this.showForm = true;
+      },
+      submitTripForm(){
+        this.showForm = false;
+        this.trip.start_date = this.$options.filters.dateToString(this.trip.start_date);
+        this.trip.sailing_start = this.$options.filters.dateToString(this.trip.sailing_start);
+        this.trip.sailing_end = this.$options.filters.dateToString(this.trip.sailing_end);
+        this.trip.end_date = this.$options.filters.dateToString(this.trip.end_date);
+        this.trip.type = this.selectedType;
+        this.trip.status = this.selectedStatus;
+        this.$validator.validateAll().then(result => {
+          if(result) {
+            this.transactionForm.date = this.$options.filters.dateToString(this.transactionForm.date);
+            this.axios.post('trip/add',this.trip)
+              .then(res => {
+                if (res.data.notify){
+                  this.$vs.notify({
+                    title:res.data.notify.title,
+                    text:res.data.notify.message,
+                    color:res.data.notify.type
+                  })
+                }
+                if (res.data.status == 'success') {
+                  this.trip = {
+                    ship_id:'',
+                    from:'',
+                    to:'',
+                    start_date:'',
+                    sailing_start:'',
+                    sailing_end:'',
+                    end_date:'',
+                    cargo:'',
+                    cargo_quantity:'',
+                    total_fuel:'',
+                    type:'',
+                    status:''
+                  }
+                  this.$validator.reset();
+                }
+                this.update();
+
+              })
+          }else{
+            // form have errors
+          }
+        })
+      },
       showTripFn(tripId){
           this.axios.get('trip/'+tripId)
             .then(res => {
@@ -143,6 +327,7 @@
         this.popupActive = true;
       },
       submitForm() {
+        this.popupActive = false;
         this.$validator.validateAll().then(result => {
           if(result) {
             this.transactionForm.date = this.$options.filters.dateToString(this.transactionForm.date);
@@ -157,7 +342,6 @@
                   })
                 }
                 if (res.data.status == 'success') {
-                  this.popupActive = false;
                   this.transactionForm = {
                     action:'',
                     type:'',
@@ -167,18 +351,10 @@
                     amount:'',
                   }
                 }
+                this.$validator.reset();
                 this.update();
 
               })
-              .catch(error => {
-                if (error.response.status == 422){
-                  console.log(error.response.data.errors);
-                  this.$vs.notify({
-                    title:'Validation error',
-                    text:'Error in your data.Please check your input',
-                    color:'warning'})
-                }
-              });
           }else{
             // form have errors
           }
@@ -207,3 +383,14 @@
     }
   }
 </script>
+<style scoped>
+  .vdp-datepicker input {
+    width: 100%;
+  }
+  .select_input{
+    padding-top: 10px;
+  }
+  ::v-deep .vs-popup--content {
+    overflow: inherit;
+  }
+</style>

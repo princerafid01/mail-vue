@@ -27,6 +27,18 @@ export default [
     icon: "HomeIcon",
   },
   {
+    url: "/ship/hm1",
+    name: "Hasan Hamim 1",
+    slug: "hasan-hamim-1",
+    icon: "DiscIcon",
+  },
+  {
+    url: "/ship/hm3",
+    name: "Hasan Hamim-3",
+    slug: "hasan-hamim-3",
+    icon: "DiscIcon",
+  },
+  {
     url: "/trips",
     name: "Trips",
     slug: "trips",

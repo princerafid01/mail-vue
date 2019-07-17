@@ -156,6 +156,42 @@ const router = new Router({
             },
             component: () => import('./views/trips/TripAdd.vue')
           },
+          {
+            path: '/ship/hm1',
+            name: 'ship1',
+            meta: {
+              auth: {
+                roles: 'ship_view',
+                forbiddenRedirect: '/403'
+              },
+              breadcrumb: [
+                { title: 'Home', url: '/' },
+                { title: 'Ship', url: '/ship/hm1' },
+                { title: 'Hasan Hamim 1', active: true },
+              ],
+              pageTitle: 'Hasan Hamim 1',
+              ship_id:1
+            },
+            component: () => import('./views/ships/Ship.vue')
+          },
+          {
+            path: '/ship/hm3',
+            name: 'ship2',
+            meta: {
+              auth: {
+                roles: 'ship_view',
+                forbiddenRedirect: '/403'
+              },
+              breadcrumb: [
+                { title: 'Home', url: '/' },
+                { title: 'Ship', url: '/ship/hm3' },
+                { title: 'Hasan Hamim 3', active: true },
+              ],
+              pageTitle: 'Hasan Hamim 3',
+              ship_id:2
+            },
+            component: () => import('./views/ships/Ship.vue')
+          },
         ],
       },
     // =============================================================================

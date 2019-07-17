@@ -58,7 +58,7 @@
                 <vs-dropdown-item v-if="$auth.check(['income_add'])" @click="addIncome(data[indextr].id)">Add Income</vs-dropdown-item>
                 <vs-dropdown-item v-if="$auth.check(['expense_add'])" @click="addExpense(data[indextr].id)">Add Expense</vs-dropdown-item>
                 <vs-dropdown-item v-if="$auth.check(['income_edit'])"><router-link :to="'trip/edit?id='+data[indextr].id">Edit</router-link></vs-dropdown-item>
-                <vs-dropdown-item divider v-if="$auth.check(['income_delete'])" @click="deleteTrip(data[indextr].id)">Delete</vs-dropdown-item>
+                <vs-dropdown-item divider v-if="$auth.check(['income_delete'])" @click="confirmDelete(data[indextr].id)">Delete</vs-dropdown-item>
               </vs-dropdown-menu>
             </vs-dropdown>
           </vs-td>
@@ -90,6 +90,16 @@
         </div>
       </vs-popup>
     </div>
+    <div class="demo-alignment">
+      <vs-popup class="holamundo" title="Are you sure?" :active.sync="deleteConfirmation">
+        <p>This action can not undone! If this is mistake click cancel</p>
+        <div class="flex justify-between flex-wrap">
+          <vs-button class="mt-4 shadow-lg" type="gradient" @click="deleteTr(deleteId)" color="danger">Delete</vs-button>
+          <vs-button class="mt-4 shadow-lg" type="gradient" @click="deleteConfirmation=false" color="success">Cancel</vs-button>
+        </div>
+
+      </vs-popup>
+    </div>
     <router-link to="/trip/add"><vs-button class="floating-btn" color="success" type="gradient" icon-pack="feather" icon="icon-plus"></vs-button></router-link>
   </vx-card>
 </template>
@@ -105,6 +115,8 @@
         showTrip:false,
         tripData:null,
         popupActive: false,
+        deleteConfirmation:false,
+        deleteId:'',
         transactionForm:{
           action:'',
           type:'',
@@ -126,8 +138,31 @@
       }
     },
     methods:{
+      confirmDelete(id){
+        this.deleteConfirmation = true;
+        this.deleteId = id;
+      },
+      deleteTr(id){
+        this.deleteConfirmation = false;
+        if (this.$auth.check(['trip_delete'])){
+          this.axios.delete('trip/'+id)
+            .then(res => {
+              if (res.data.notify){
+                this.$vs.notify({
+                  title:res.data.notify.title,
+                  text:res.data.notify.message,
+                  color:res.data.notify.type
+                })
+              }
+              this.update();
 
-      deleteTrip(){
+            })
+        }else{
+          this.$vs.notify({
+            title:'Unauthorised Access !',
+            text:'You are not authorized for some information.',
+            color:'danger'})
+        }
 
       },
       showTripFn(tripId){

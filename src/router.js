@@ -43,16 +43,29 @@ const router = new Router({
           {
             path: '/',
             name: 'home',
-            meta: {auth: true},
+            meta: {
+              auth: true,
+              breadcrumb: [
+                { title: 'home', active: true },
+              ],
+              pageTitle: 'Home',
+            },
             component: () => import('./views/Home.vue')
           },
           {
             path: '/trips',
             name: 'trips',
-            meta: {auth: {
+            meta: {
+              auth: {
                 roles: 'trip_view',
                 forbiddenRedirect: '/403'
-              }},
+              },
+              breadcrumb: [
+                { title: 'Home', url: '/' },
+                { title: 'Trips', active: true },
+              ],
+              pageTitle: 'Trips',
+              },
             component: () => import('./views/trips/Trips.vue')
           },
           {
@@ -63,7 +76,13 @@ const router = new Router({
                 roles: 'income_view',
                 forbiddenRedirect: '/403'
               },
-              type:'income'
+              type:'income',
+              breadcrumb: [
+                { title: 'Home', url: '/' },
+                { title: 'Trips', url: '/trips' },
+                { title: 'Income', active: true },
+              ],
+              pageTitle: 'Income',
             },
             component: () => import('./views/transaction/Transaction.vue')
           },
@@ -75,7 +94,13 @@ const router = new Router({
                 roles: 'expense_view',
                 forbiddenRedirect: '/403'
               },
-              type:'expense'
+              type:'expense',
+              breadcrumb: [
+                { title: 'Home', url: '/' },
+                { title: 'Trips', url: '/trips' },
+                { title: 'Expense', active: true },
+              ],
+              pageTitle: 'Expense',
             },
             component: () => import('./views/transaction/Transaction.vue')
           },
@@ -87,7 +112,13 @@ const router = new Router({
                 roles: 'gexpense_view',
                 forbiddenRedirect: '/403'
               },
-              type:'gexpense'
+              type:'gexpense',
+              breadcrumb: [
+                { title: 'Home', url: '/' },
+                { title: 'Trips', url: '/trips' },
+                { title: 'General Expense', active: true },
+              ],
+              pageTitle: 'General Expense',
             },
             component: () => import('./views/transaction/Transaction.vue')
           },
@@ -99,6 +130,12 @@ const router = new Router({
                 roles: 'trip_add',
                 forbiddenRedirect: '/403'
               },
+              breadcrumb: [
+                { title: 'Home', url: '/' },
+                { title: 'trips', url: '/trips' },
+                { title: 'Add Trip', active: true },
+              ],
+              pageTitle: 'Add Trip',
             },
             component: () => import('./views/trips/TripAdd.vue')
           },
@@ -110,6 +147,12 @@ const router = new Router({
                 roles: 'trip_edit',
                 forbiddenRedirect: '/403'
               },
+              breadcrumb: [
+                { title: 'Home', url: '/' },
+                { title: 'trips', url: '/trips' },
+                { title: 'Edit Trip', active: true },
+              ],
+              pageTitle: 'Edit Trip',
             },
             component: () => import('./views/trips/TripAdd.vue')
           },

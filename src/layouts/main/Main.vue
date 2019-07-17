@@ -32,34 +32,34 @@
                             <!-- BREADCRUMB -->
                             <vx-breadcrumb class="ml-4 md:block hidden" v-if="$route.meta.breadcrumb" />
 
-                            <!-- DROPDOWN -->
-                            <vs-dropdown class="ml-auto md:block hidden cursor-pointer" vs-trigger-click>
-                                <vs-button radius icon="icon-settings" icon-pack="feather"></vs-button>
+                            <!--&lt;!&ndash; DROPDOWN &ndash;&gt;-->
+                            <!--<vs-dropdown class="ml-auto md:block hidden cursor-pointer" vs-trigger-click>-->
+                                <!--<vs-button radius icon="icon-settings" icon-pack="feather"></vs-button>-->
 
-                                <vs-dropdown-menu class="w-32">
+                                <!--<vs-dropdown-menu class="w-32">-->
 
-                                    <vs-dropdown-item>
-                                      <div @click="$router.push('/pages/profile')" class="flex items-center">
-                                        <feather-icon icon="UserIcon" class="inline-block mr-2" svgClasses="w-4 h-4" />
-                                        <span>Profile</span>
-                                      </div>
-                                    </vs-dropdown-item>
+                                    <!--<vs-dropdown-item>-->
+                                      <!--<div @click="$router.push('/pages/profile')" class="flex items-center">-->
+                                        <!--<feather-icon icon="UserIcon" class="inline-block mr-2" svgClasses="w-4 h-4" />-->
+                                        <!--<span>Profile</span>-->
+                                      <!--</div>-->
+                                    <!--</vs-dropdown-item>-->
 
-                                    <vs-dropdown-item>
-                                      <div @click="$router.push('/apps/todo')" class="flex items-center">
-                                        <feather-icon icon="CheckSquareIcon" class="inline-block mr-2" svgClasses="w-4 h-4" />
-                                        <span>Tasks</span>
-                                      </div>
-                                    </vs-dropdown-item>
+                                    <!--<vs-dropdown-item>-->
+                                      <!--<div @click="$router.push('/apps/todo')" class="flex items-center">-->
+                                        <!--<feather-icon icon="CheckSquareIcon" class="inline-block mr-2" svgClasses="w-4 h-4" />-->
+                                        <!--<span>Tasks</span>-->
+                                      <!--</div>-->
+                                    <!--</vs-dropdown-item>-->
 
-                                    <vs-dropdown-item>
-                                      <div @click="$router.push('/apps/email')" class="flex items-center">
-                                        <feather-icon icon="MailIcon" class="inline-block mr-2" svgClasses="w-4 h-4" />
-                                        <span>Inbox</span>
-                                      </div>
-                                    </vs-dropdown-item>
-                                </vs-dropdown-menu>
-                            </vs-dropdown>
+                                    <!--<vs-dropdown-item>-->
+                                      <!--<div @click="$router.push('/apps/email')" class="flex items-center">-->
+                                        <!--<feather-icon icon="MailIcon" class="inline-block mr-2" svgClasses="w-4 h-4" />-->
+                                        <!--<span>Inbox</span>-->
+                                      <!--</div>-->
+                                    <!--</vs-dropdown-item>-->
+                                <!--</vs-dropdown-menu>-->
+                            <!--</vs-dropdown>-->
                         </div>
                         </transition>
                         <div class="content-area__content">

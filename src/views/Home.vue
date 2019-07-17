@@ -9,7 +9,7 @@
           <div class="btn-group flex flex-wrap mb-2">
             <vs-button v-if="$auth.check(['income_add'])" @click="addIncome(trip.id)" style="width: 33.3333%">Add Income</vs-button>
             <vs-button v-if="$auth.check(['expense_add'])" @click="addExpense(trip.id)" style="width: 33.3333%">Add Expense</vs-button>
-            <vs-button v-if="$auth.check(['trip_edit'])" style="width: 33.3333%">Edit Trip</vs-button>
+            <vs-button v-if="$auth.check(['trip_edit'])" style="width: 33.3333%"><router-link style="color: white;" :to="'trip/edit?id='+trip.id">Edit Trip</router-link></vs-button>
           </div>
           <div class="demo-alignment">
 
@@ -93,7 +93,7 @@
         title-color="#fff"
         content-color="#fff"
         card-background="linear-gradient(45deg, #43a047, #1de9b6)">
-        <h2 class="text-white text-center">{{totalIncome}}</h2>
+        <h2 class="text-white text-center">{{totalIncome|currency}}</h2>
       </vx-card>
     </div>
     <div class="vx-col w-full md:w-1/4 mb-base">
@@ -103,7 +103,7 @@
         title-color="#fff"
         content-color="#fff"
         card-background="linear-gradient(45deg, #bf360c, #f57c00)">
-        <h3 class="text-white text-center">{{totalExpense}}</h3>
+        <h3 class="text-white text-center">{{totalExpense|currency}}</h3>
       </vx-card>
     </div>
     <div class="vx-col w-full md:w-1/4 mb-base">
@@ -113,7 +113,7 @@
         title-color="#fff"
         card-background="success"
         content-color="#fff">
-        <h3 class="text-white text-center">{{totalProfit}}</h3>
+        <h3 class="text-white text-center">{{totalProfit|currency}}</h3>
       </vx-card>
     </div>
 

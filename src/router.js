@@ -91,6 +91,28 @@ const router = new Router({
             },
             component: () => import('./views/transaction/Transaction.vue')
           },
+          {
+            path: '/trip/add',
+            name: 'Add Trip',
+            meta: {
+              auth: {
+                roles: 'trip_add',
+                forbiddenRedirect: '/403'
+              },
+            },
+            component: () => import('./views/trips/TripAdd.vue')
+          },
+          {
+            path: '/trip/edit',
+            name: 'EditTrip',
+            meta: {
+              auth: {
+                roles: 'trip_edit',
+                forbiddenRedirect: '/403'
+              },
+            },
+            component: () => import('./views/trips/TripAdd.vue')
+          },
         ],
       },
     // =============================================================================

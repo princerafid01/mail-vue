@@ -3,8 +3,8 @@
     <vs-collapse v-if="type == 'gexpense'" type="border">
 
       <vs-collapse-item :open="mindex == 0" v-for="(monthly, mindex) in monthlyData">
-        <div slot="header">
-          {{monthly.month}} - {{monthly.total | currency}} <vs-button @click="print(mindex)" style="float: right" type="gradient">Print</vs-button>
+        <div slot="header" class="text-white">
+          {{monthly.month}} - {{monthly.total | currency}} <vs-button  @click="print(mindex)" style="float: right; margin-top: -5px" class="hidden lg:inline-flex" color="#ffc400" type="filled">Print</vs-button>
         </div>
         <h6>Number of rows</h6>
         <v-select style="margin-bottom: -12px !important;" class="md:w-1/6 mb-base" @input="setMax"  v-model="maxItem" :options="options"></v-select>
@@ -350,3 +350,8 @@
     }
   }
 </script>
+<style>
+  .vs-collapse-item .vs-collapse-item--header{
+    background: rgb(115, 103, 240) !important;
+  }
+</style>

@@ -62,4 +62,10 @@ export default [
     slug: "gexpense",
     icon: "DollarSignIcon",
   },
+  {
+    url: "/users",
+    name: "Users",
+    slug: "users",
+    icon: "UsersIcon",
+  },
 ]

@@ -192,6 +192,56 @@ const router = new Router({
             },
             component: () => import('./views/ships/Ship.vue')
           },
+          {
+            path: '/users',
+            name: 'users',
+            meta: {
+              auth: {
+                roles: 'user_view',
+                forbiddenRedirect: '/403'
+              },
+              breadcrumb: [
+                { title: 'Home', url: '/' },
+                { title: 'Users', active: true },
+              ],
+              pageTitle: 'Users',
+            },
+            component: () => import('./views/users/User.vue')
+          },
+          {
+            path: '/user/edit',
+            name: 'user_edit',
+            meta: {
+              auth: {
+                roles: 'user_edit',
+                forbiddenRedirect: '/403'
+              },
+              breadcrumb: [
+                { title: 'Home', url: '/' },
+                { title: 'Users', url: '/users' },
+                { title: 'Edit', active: true },
+              ],
+              pageTitle: 'Edit User',
+            },
+            component: () => import('./views/users/UserAdd.vue')
+          },
+          {
+            path: '/user/add',
+            name: 'user_add',
+            meta: {
+              auth: {
+                roles: 'user_add',
+                forbiddenRedirect: '/403'
+              },
+              breadcrumb: [
+                { title: 'Home', url: '/' },
+                { title: 'Users', url: '/users' },
+                { title: 'Add', active: true },
+              ],
+              pageTitle: 'Add User',
+            },
+            component: () => import('./views/users/UserAdd.vue')
+          },
         ],
       },
     // =============================================================================

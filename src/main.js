@@ -90,7 +90,13 @@ new Vue({
         notify ({
           title:'Validation error',
           text:'Error in your data.Please check your input',
-          color:'warning'})
+          color:'warning'});
+        for(var key in error.response.data.errors) {
+          notify ({
+            title:key,
+            text:error.response.data.errors[key][0],
+            color:'warning'});
+        }
       } else if (error.response.status == 403){
         notify ({
           title:'Unauthorised Access !',

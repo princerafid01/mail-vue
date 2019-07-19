@@ -1,5 +1,5 @@
 <template>
-  <vx-card title="All Users">
+  <vx-card title="Roles">
     <div class="grid-demo__layout-container">
       <vs-row vs-w="12">
         <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-lg="4" vs-sm="12" vs-xs="12">
@@ -27,6 +27,7 @@
                 <vs-dropdown color="success" style="cursor: pointer" vs-trigger-click>
                 <vs-button class="btn-drop" type="filled" icon="more_horiz"></vs-button>
                 <vs-dropdown-menu >
+                  <vs-dropdown-item v-if="$auth.check(['super_admin'])"><router-link :to="'/roles/permission/'+role.id">Edit Permission</router-link></vs-dropdown-item>
                   <vs-dropdown-item v-if="$auth.check(['super_admin'])" @click="edit(role.id, role.label)">Edit</vs-dropdown-item>
                   <vs-dropdown-item divider v-if="$auth.check(['super_admin'])" @click="confirmDelete(role.id)">Delete</vs-dropdown-item>
                 </vs-dropdown-menu>

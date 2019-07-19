@@ -46,7 +46,7 @@ const router = new Router({
             meta: {
               auth: true,
               breadcrumb: [
-                { title: 'home', active: true },
+                { title: 'Home', active: true },
               ],
               pageTitle: 'Home',
             },
@@ -258,6 +258,23 @@ const router = new Router({
               pageTitle: 'Roles',
             },
             component: () => import('./views/role/Role.vue')
+          },
+          {
+            path: '/roles/permission/:id',
+            name: 'permission',
+            meta: {
+              auth: {
+                roles: 'super_admin',
+                forbiddenRedirect: '/403'
+              },
+              breadcrumb: [
+                { title: 'Home', url: '/' },
+                { title: 'Roles', url: '/roles' },
+                { title: 'Permission', active: true },
+              ],
+              pageTitle: 'Role Permission',
+            },
+            component: () => import('./views/role/Permission.vue')
           },
         ],
       },

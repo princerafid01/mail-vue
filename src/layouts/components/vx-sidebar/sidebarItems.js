@@ -68,4 +68,10 @@ export default [
     slug: "users",
     icon: "UsersIcon",
   },
+  {
+    url: "/roles",
+    name: "Roles",
+    slug: "roles",
+    icon: "AlignJustifyIcon",
+  },
 ]

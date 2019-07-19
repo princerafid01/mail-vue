@@ -242,6 +242,23 @@ const router = new Router({
             },
             component: () => import('./views/users/UserAdd.vue')
           },
+          {
+            path: '/roles',
+            name: 'roles',
+            meta: {
+              auth: {
+                roles: 'super_admin',
+                forbiddenRedirect: '/403'
+              },
+              breadcrumb: [
+                { title: 'Home', url: '/' },
+                // { title: 'Roles', url: '/roles' },
+                { title: 'Roles', active: true },
+              ],
+              pageTitle: 'Roles',
+            },
+            component: () => import('./views/role/Role.vue')
+          },
         ],
       },
     // =============================================================================

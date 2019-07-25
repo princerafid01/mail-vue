@@ -118,6 +118,7 @@ export default {
             },
             set(val) {
                 this.$store.commit('TOGGLE_REDUCE_BUTTON', val)
+              localStorage.setItem('sidebar', JSON.stringify(val));
             }
         },
         sidebarItemsMin() {

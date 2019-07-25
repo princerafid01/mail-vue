@@ -33,7 +33,7 @@
         </div>
         <div class="vx-col md:w-1/4">
           <div class="select_input">
-            <label class="vs-input--label">Ship</label>
+            <label class="vs-input--label">Status</label>
             <v-select class="select_input" v-model="selectedStatus" :clearable="false" :options="['Active', 'Inactive']"></v-select>
           </div>
         </div>

@@ -48,6 +48,9 @@ const mutations = {
     UPDATE_WINDOW_WIDTH(state, width) {
       state.windowWidth = width;
     },
+    SET_THEME(state, vale){
+      state.theme = vale;
+    },
 
 
     // ////////////////////////////////////////////

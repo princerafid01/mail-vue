@@ -45,7 +45,8 @@ Vue.filter('formatDate', function (value) {
   }
 })
 Vue.filter('currency', function (value) {
-  return parseFloat(value).toFixed(2) + ' Tk.';
+  let v = value? value:'0';
+  return parseInt(v).toFixed(2) + ' Tk.';
 });
 
 Vue.filter('date', function(value, fullDate = false) {

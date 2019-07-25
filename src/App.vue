@@ -53,6 +53,12 @@ export default {
       window.addEventListener('resize', this.handleWindowResize);
     });
     this.$store.dispatch('updateWindowWidth', window.innerWidth);
+    if (localStorage.getItem('theme')){
+      this.$store.commit('SET_THEME', localStorage.getItem('theme'));
+    }
+    if (localStorage.getItem('sidebar')){
+      this.$store.commit('TOGGLE_REDUCE_BUTTON', JSON.parse(localStorage.getItem('sidebar')))
+    }
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.handleWindowResize);

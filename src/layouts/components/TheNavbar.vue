@@ -68,47 +68,27 @@
 
       <!-- NOTIFICATIONS -->
       <vs-dropdown vs-custom-content vs-trigger-click class="cursor-pointer ml-4">
-        <feather-icon icon="BellIcon" class="cursor-pointer mt-1 sm:mr-6 mr-2" :badge="unreadNotifications.length"></feather-icon>
+        <feather-icon icon="BellIcon" class="cursor-pointer mt-1 sm:mr-6 mr-2" badge_bg="bg-danger" :badge="unread"></feather-icon>
         <vs-dropdown-menu class="notification-dropdown dropdown-custom vx-navbar-dropdown">
 
           <div class="notification-top text-center p-5 bg-primary text-white">
-            <h3 class="text-white">{{ unreadNotifications.length }} New</h3>
-            <p class="opacity-75">App Notifications</p>
+            <h3 class="text-white">{{unread }} New</h3>
+            <vs-chip class="float-right" style="cursor: pointer" v-if="unread" color="success"><span @click="markAllRead">Mark all read</span></vs-chip>
           </div>
 
-          <VuePerfectScrollbar ref="mainSidebarPs" class="scroll-area--nofications-dropdown p-0 mb-10" :settings="settings">
-          <ul class="bordered-items">
-            <li v-for="ntf in unreadNotifications" :key="ntf.index" class="flex justify-between px-4 py-4 notification cursor-pointer">
+          <VuePerfectScrollbar @ps-y-reach-end="onScroll" ref="mainSidebarPs" class="scroll-area--nofications-dropdown p-0 mb-10" :settings="settings">
+          <ul @scroll="onScroll" class="bordered-items">
+            <li v-for="(ntf, index) in notifications" :key="ntf.id" @click="markRead(index, ntf.id, ntf.read_at)" class="flex justify-between px-4 py-4 notification cursor-pointer">
               <div class="flex items-start">
-                <feather-icon :icon="ntf.icon" :svgClasses="[`text-${ntf.category}`, 'stroke-current mr-1 h-6 w-6']"></feather-icon>
+                <feather-icon :icon="ntf.data.icon" :svgClasses="[ntf.read_at == ''?'text-danger':'text-success', 'stroke-current mr-1 h-6 w-6']"></feather-icon>
                 <div class="mx-2">
-                  <span class="font-medium block notification-title" :class="[`text-${ntf.category}`]">{{ ntf.title }}</span>
-                  <small>{{ ntf.msg }}</small>
+                  <span class="font-medium block notification-title" :class="[ntf.read_at == null?'text-danger':'text-success']">{{ ntf.data.msg}}</span>
                 </div>
               </div>
-              <small class="mt-1 whitespace-no-wrap">{{ elapsedTime(ntf.time) }}</small>
+              <small class="mt-1 whitespace-no-wrap">{{ elapsedTime(ntf.created_at) }}</small>
             </li>
           </ul>
           </VuePerfectScrollbar>
-                    <div class="
-                        checkout-footer
-                        fixed
-                        bottom-0
-                        rounded-b-lg
-                        text-primary
-                        w-full
-                        p-2
-                        font-semibold
-                        text-center
-                        border
-                        border-b-0
-                        border-l-0
-                        border-r-0
-                        border-solid
-                        d-theme-border-grey-light
-                        cursor-pointer">
-                        <span>View All Notifications</span>
-                    </div>
         </vs-dropdown-menu>
       </vs-dropdown>
 
@@ -170,15 +150,13 @@ export default {
     },
     data() {
         return {
+            take:0,
             navbarSearchAndPinList: this.$store.state.navbarSearchAndPinList,
             searchQuery: '',
             showFullSearch: false,
-            unreadNotifications: [
-                { index: 0, title: 'New Message', msg: 'Are your going to meet me tonight?', icon: 'MessageSquareIcon', time: 'Wed Jan 30 2019 07:45:23 GMT+0000 (GMT)', category: 'primary' },
-                { index: 1, title: 'New Order Recieved', msg: 'You got new order of goods.', icon: 'PackageIcon', time: 'Wed Jan 30 2019 07:45:23 GMT+0000 (GMT)', category: 'success' },
-                { index: 2, title: 'Server Limit Reached!', msg: 'Server have 99% CPU usage.', icon: 'AlertOctagonIcon', time: 'Thu Jan 31 2019 07:45:23 GMT+0000 (GMT)', category: 'danger' },
-                { index: 3, title: 'New Mail From Peter', msg: 'Cake sesame snaps cupcake', icon: 'MailIcon', time: 'Fri Feb 01 2019 07:45:23 GMT+0000 (GMT)', category: 'primary' },
-                { index: 4, title: 'Bruce\'s Party', msg: 'Chocolate cake oat cake tiramisu', icon: 'CalendarIcon', time: 'Fri Feb 02 2019 07:45:23 GMT+0000 (GMT)', category: 'warning' },
+            unread:0,
+            loading:false,
+            notifications:[
             ],
             settings: { // perfectscrollbar settings
                 maxScrollbarLength: 60,
@@ -247,6 +225,58 @@ export default {
           this.$store.commit('SET_THEME', theme);
           localStorage.setItem('theme', theme);
         },
+        markRead(index, id,read){
+          if (read == null){
+            this.axios.get('mark_read/'+id)
+              .then( res => {
+                this.notifications[index].read_at = 'read'
+              })
+            this.unread-=1;
+          }
+        },
+        markAllRead(){
+            this.axios.get('mark_all_read')
+              .then(res => {
+                if (res.data.notify){
+                  this.unread  = 0;
+                  this.notifications = [];
+                  this.take = 0;
+                  this.getNotifications()
+                  this.$vs.notify({
+                    title:res.data.notify.title,
+                    text:res.data.notify.message,
+                    color:res.data.notify.type
+                  })
+                }
+              })
+        },
+        getNotifications(){
+          if (!this.loading){
+            this.loading = true;
+            this.axios.get('notifications', {params:{take:this.take}})
+              .then(res => {
+                this.unread = res.data.unread;
+                if (res.data.notifications == 'no'){
+                  this.$vs.notify({
+                    title:'No more notification!',
+                    text:'You do not have more notification',
+                    color:'warning'
+                  })
+                } else{
+                  for(var key in res.data.notifications) {
+                    this.notifications.push(res.data.notifications[key]);
+                  }
+                  this.take+=10;
+                  this.loading = false;
+                }
+              })
+          }
+        },
+        onScroll () {
+            console.log('run');
+            this.getNotifications();
+
+        },
         logout(){
           var app = this
           this.$auth.logout({
@@ -310,6 +340,12 @@ export default {
         outside: function() {
             this.showBookmarkPagesDropdown = false
         },
+        loadMore(){
+
+        }
+    },
+    mounted(){
+      this.getNotifications();
     },
     directives: {
         'click-outside': {

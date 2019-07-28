@@ -16,11 +16,12 @@ export default {
     props: {
         icon: { type: String, required: true },
         svgClasses: { type: [String, Object, Array], default: "" },
-        badge: {}
+        badge: {},
+        badge_bg:{ type: String,  default: "bg-primary" }
     },
     render(h) {
         let svg = h(icons[this.icon], {class: this.svgClasses});
-        let badgeEl = h('span', {class: 'feather-icon-badge bg-primary text-white h-5 w-5 absolute rounded-full text-xs flex items-center justify-center', style: 'top: -7px; right: -5px'}, [this.badge]);
+        let badgeEl = h('span', {class: 'feather-icon-badge '+this.badge_bg+' text-white h-5 w-5 absolute rounded-full text-xs flex items-center justify-center', style: 'top: -7px; right: -5px'}, [this.badge]);
         let attr = {
             class: ['feather-icon select-none relative'],
             on: {

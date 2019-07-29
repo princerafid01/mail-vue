@@ -64,7 +64,6 @@
                     <feather-icon icon="XIcon" class="px-4 cursor-pointer h-full close-search-icon" @click="showFullSearch = false"></feather-icon>
                 </div>
             </div>
-            <feather-icon icon="SearchIcon" @click="showFullSearch = true" class="cursor-pointer navbar-fuzzy-search ml-4"></feather-icon>
 
       <!-- NOTIFICATIONS -->
       <vs-dropdown vs-custom-content vs-trigger-click class="cursor-pointer ml-4">
@@ -145,7 +144,7 @@ export default {
     props: {
         navbarColor: {
             type: String,
-            default: "#fff",
+            default: "rgb(115, 103, 240)",
         },
     },
     data() {

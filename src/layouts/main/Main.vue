@@ -11,7 +11,7 @@
 <template>
     <div class="layout--main" :class="[navbarClasses, footerClasses, {'app-page': isAppPage}]">
 
-        <vx-sidebar :sidebarItems="sidebarItems" :logo="require('@/assets/images/logo/logo.png')" title="Vuesax" parent=".layout--main" />
+        <vx-sidebar :sidebarItems="sidebarItems" :logo="require('@/assets/images/logo/logo.png')" title="NNSL" parent=".layout--main" />
 
         <div id="content-area" :class="[contentAreaClass, {'show-overlay': bodyOverlay}]">
 
@@ -92,7 +92,7 @@ export default {
     data() {
         return {
             navbarType: themeConfig.navbarType || 'floating',
-            navbarColor: themeConfig.navbarColor || '#fff',
+            navbarColor: themeConfig.navbarColor || 'rgb(115, 103, 240)',
             footerType: themeConfig.footerType || 'static',
             routerTransition: themeConfig.routerTransition || 'none',
             isNavbarDark: false,
@@ -112,7 +112,7 @@ export default {
             if(this.navbarColor == "#fff" && val) {
                 this.updateNavbarColor("#10163a")
             }else {
-                this.updateNavbarColor("#fff")
+                this.updateNavbarColor("rgb(115, 103, 240)")
             }
         },
     },

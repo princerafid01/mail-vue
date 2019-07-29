@@ -11,7 +11,7 @@
     </vs-col>
 
     <vs-col  vs-w="6">
-      <table >
+      <table class="border-collapse" >
         <tr>
           <td><b class="uppercase strong black-text">Ship</b></td>
           <td>{{tripData.ship.name}}</td>
@@ -76,23 +76,22 @@
     </vs-col>
     <vs-col  vs-w="6">
       <h3 style="border-bottom: 1px solid black" class="mt-2">Expenses</h3>
-      <table v-if="tripData.expense !=0">
+      <table v-if="tripData.expense !=0" class="border-collapse">
           <thead>
-          <tr>
+          <tr class="p-2 border border-solid bg-primary text-white d-theme-border-grey-light">
             <th>Date</th>
             <th>Detail</th>
             <th>Amount</th>
           </tr>
           </thead>
         <tbody>
-        <tr v-for="ex in tripData.expenses">
+        <tr v-for="ex in tripData.expenses" class="p-2 border border-solid d-theme-border-grey-light">
           <td>{{ex.created_at | formatDate}}</td>
           <td>{{ex.detail}}</td>
           <td>{{ex.amount | currency}}</td>
         </tr>
-        <tr>
-          <td colspan="2"></td>
-          <td>Total = {{tripData.expense | currency}}</td>
+        <tr class="p-2 border border-solid d-theme-border-grey-light">
+          <td colspan="3" class="text-right">Total = {{tripData.expense | currency}}</td>
         </tr>
         </tbody>
       </table>
@@ -102,21 +101,20 @@
       <h3 style="border-bottom: 1px solid black" class="mt-2">Incomes</h3>
       <table v-if="tripData.income != 0">
         <thead>
-        <tr>
+        <tr class="p-2 border border-solid bg-primary text-white d-theme-border-grey-light">
           <th>Date</th>
           <th>Detail</th>
           <th>Amount</th>
         </tr>
         </thead>
         <tbody>
-        <tr v-for="ex in tripData.incomes">
+        <tr v-for="ex in tripData.incomes" class="p-2 border border-solid d-theme-border-grey-light">
           <td>{{ex.created_at | formatDate}}</td>
           <td>{{ex.detail}}</td>
           <td>{{ex.amount | currency}}</td>
         </tr>
-        <tr>
-          <td colspan="2"></td>
-          <td>Total = {{tripData.income | currency}}</td>
+        <tr class="p-2 border border-solid  d-theme-border-grey-light">
+          <td colspan="3" class="text-right">Total = {{tripData.income | currency}}</td>
         </tr>
         </tbody>
       </table>
@@ -129,15 +127,15 @@
 
       <table >
         <tbody>
-          <tr >
+          <tr  class="p-2 border border-solid d-theme-border-grey-light">
             <td>Total Income</td>
             <td>{{tripData.income | currency}}</td>
           </tr>
-          <tr >
+          <tr  class="p-2 border border-solid d-theme-border-grey-light">
             <td>Total Expense</td>
             <td>{{tripData.expense | currency}}</td>
           </tr>
-          <tr >
+          <tr  class="p-2 border border-solid d-theme-border-grey-light">
             <td>Profit</td>
             <td>{{tripData.profit | currency}}</td>
           </tr>
@@ -152,9 +150,7 @@
   }
 </script>
 <style scoped>
-  table, td, th {
-  border: 1px solid black;
-  }
+
 
   table {
   border-collapse: collapse;
@@ -164,6 +160,6 @@
 
   th, td {
   /*text-align: center;*/
-    padding: 5px;
+    padding: 2px;
   }
 </style>

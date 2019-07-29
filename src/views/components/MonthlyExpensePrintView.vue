@@ -12,19 +12,19 @@
       </vs-col>
       <vs-col vs-type="flex" vs-justify="center" class="mt-3" vs-align="center" vs-w="12">
         <table>
-          <tr>
+          <tr  class="p-2 border border-solid bg-primary text-white d-theme-border-grey-light">
             <th>Date</th>
             <th>Detail</th>
             <th>Created By</th>
             <th>Amount</th>
           </tr>
-          <tr v-for=" expense in reveresed">
+          <tr v-for=" expense in reveresed"  class="p-2 border border-solid d-theme-border-grey-light">
             <td>{{expense.created_at| formatDate}}</td>
             <td>{{expense.detail}}</td>
             <td>{{expense.created_by}}</td>
             <td>{{expense.amount | currency}}</td>
           </tr>
-          <tr>
+          <tr  class="p-2 border border-solid d-theme-border-grey-light">
             <td colspan="3"></td>
             <td>Total: {{data.total | currency}}</td>
           </tr>
@@ -46,9 +46,9 @@
   }
 </script>
 <style scoped>
-  table, td, th {
-    border: 1px solid black;
-  }
+  /*table, td, th {*/
+    /*border: 1px solid black;*/
+  /*}*/
 
   table {
     border-collapse: collapse;

@@ -87,6 +87,7 @@ export default {
       left: 0;
       top: 0;
       size: A4;
+      background: white;
     }
   }
 </style>

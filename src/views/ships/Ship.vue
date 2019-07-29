@@ -1,7 +1,12 @@
 <template>
   <div>
     <vx-card title="Income vs Expense vs Profit" >
-      <div class="vx-row ">
+      <div class="vx-row m-2">
+        <div class="vx-col w-full">
+          <img width="100%" src="@/assets/images/pages/Ship-bg.jpg" alt="">
+        </div>
+      </div>
+      <div class="vx-row m-2 ">
         <h3 class="vx-col md:w-full text-center">Date range filter</h3>
         <div class="vx-col md:w-1/4">
           <label class="vs-input--label">Start Date</label>
@@ -15,8 +20,6 @@
         <vs-button type="filled" @click.prevent="update"  style="margin-top: 37px !important;" class="mt-5 block">Filter</vs-button>
         </div>
       </div>
-
-      <vue-apex-charts type="area" height="350" :options="lineAreaChartSpline.chartOptions" :series="lineAreaChartSpline.series"></vue-apex-charts>
       <div class="vx-row">
       <div class="vx-col w-full md:w-1/4 mb-base">
         <vx-card

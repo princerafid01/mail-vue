@@ -157,8 +157,10 @@
         this.popupActive = true;
       },
       submitForm() {
+
         this.$validator.validateAll().then(result => {
           if(result) {
+            this.popupActive = false;
             this.transactionForm.date = this.$options.filters.dateToString(this.transactionForm.date);
             console.log(this.transactionForm);
             this.axios.post('transaction/add',this.transactionForm)
@@ -171,7 +173,6 @@
                   })
                 }
                 if (res.data.status == 'success') {
-                  this.popupActive = false;
                   this.transactionForm = {
                     action:'',
                     type:'',

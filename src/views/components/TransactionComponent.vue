@@ -2,7 +2,7 @@
   <div>
     <vs-collapse v-if="type == 'gexpense'" type="border">
 
-      <vs-collapse-item :open="mindex == 0" v-for="(monthly, mindex) in monthlyData">
+      <vs-collapse-item v-for="(monthly, mindex) in monthlyData">
         <div slot="header" class="text-white">
           {{monthly.month}} - {{monthly.total | currency}} <vs-button  @click="print(mindex)" style="float: right; margin-top: -5px" class="hidden lg:inline-flex" color="#ffc400" type="filled">Print</vs-button>
         </div>
@@ -194,6 +194,7 @@
       submitForm() {
         this.$validator.validateAll().then(result => {
           if(result) {
+            this.popupActive = false;
             this.transactionForm.date = this.$options.filters.dateToString(this.transactionForm.date);
             this.axios.post('transaction/'+this.transactionForm.id,this.transactionForm)
               .then(res => {
@@ -205,7 +206,6 @@
                   })
                 }
                 if (res.data.status == 'success') {
-                  this.popupActive = false;
                   this.transactionForm = {
                     id:'',
                     date: '',

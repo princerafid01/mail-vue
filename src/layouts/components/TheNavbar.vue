@@ -332,7 +332,7 @@ export default {
             } else if (minutes > 0) {
                 return minutes + (minutes > 1 ? ' Mins ' : ' Min ') + 'ago';
             } else if (seconds > 0) {
-                return seconds + (seconds > 1 ? `${seconds} sec ago` : 'just now');
+                return seconds > 1 ? seconds + ` sec ago` : 'Just now';
             }
 
             return 'Just Now'
@@ -340,12 +340,15 @@ export default {
         outside: function() {
             this.showBookmarkPagesDropdown = false
         },
-        loadMore(){
-
-        }
     },
     mounted(){
       this.getNotifications();
+      Echo.connector.pusher.config.auth.headers['Authorization'] = 'Bearer '+this.$auth.token();
+      Echo.private('App.User.' + this.$auth.user().id)
+        .notification((notification) => {
+          this.notifications.unshift(notification);
+          this.unread+=1;
+        });
     },
     directives: {
         'click-outside': {

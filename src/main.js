@@ -67,7 +67,7 @@ import VueAxios from 'vue-axios'
 import VueAuth from '@websanova/vue-auth'
 
 Vue.use(VueAxios, axios)
-axios.defaults.baseURL = 'http://laravel.localhost.com/api';
+axios.defaults.baseURL = process.env.VUE_APP_BASE_URL+'/api';
 Vue.router  = router;
 Vue.use(VueAuth, {
   auth: require('@websanova/vue-auth/drivers/auth/bearer.js'),
@@ -75,7 +75,8 @@ Vue.use(VueAuth, {
   router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js')
 });
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+import Echo from 'laravel-echo'
 
 new Vue({
     router,
@@ -83,6 +84,19 @@ new Vue({
     render: h => h(App),
   mounted(){
       const notify = this.$vs.notify;
+    window.Pusher = require('pusher-js');
+    window.Echo = new Echo({
+      broadcaster: 'pusher',
+      key: process.env.VUE_APP_PUSHER_APP_KEY,
+      cluster: process.env.VUE_APP_PUSHER_APP_CLUSTER,
+      encrypted: true,
+      authEndpoint: process.env.VUE_APP_BASE_URL+'/broadcasting/auth',
+      auth: {
+        headers: {
+          Authorization: 'Bearer ' + this.$auth.token('default_auth_token')
+        }
+      }
+    });
     this.axios.interceptors.response.use(function (response) {
       return response;
     }, function (error) {

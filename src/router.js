@@ -294,6 +294,19 @@ const router = new Router({
             meta: {auth: false},
             component: () => import('@/views/pages/Login.vue')
           },
+          ,
+          {
+            path: '/forgot-password',
+            name: 'pageForgotPassword',
+            component: () => import('@/views/pages/ForgotPassword.vue'),
+            meta: {auth: false}
+          },
+          {
+            path: '/password/reset/:token',
+            name: 'pageResetPassword',
+            component: () => import('@/views/pages/ResetPassword.vue'),
+            meta: {auth: false}
+          },
           {
             path: '/404',
             name: 'Error404',

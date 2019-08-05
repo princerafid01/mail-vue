@@ -3,7 +3,8 @@
     <vx-card title="Income vs Expense vs Profit" >
       <div class="vx-row m-2">
         <div class="vx-col w-full">
-          <img width="100%" src="@/assets/images/pages/Ship-bg.jpg" alt="">
+          <iframe class="hidden lg:inline-flex" width="100%" height="400px" :src="axios.defaults.baseURL + '/animation'" frameborder="no" allowtransparency="true" allowfullscreen="true">
+          </iframe>
         </div>
       </div>
       <div class="vx-row m-2 ">
@@ -136,7 +137,7 @@
       this.update();
     },
     components: {
-      VueApexCharts, Datepicker
+      VueApexCharts, Datepicker,
     }
   }
 </script>

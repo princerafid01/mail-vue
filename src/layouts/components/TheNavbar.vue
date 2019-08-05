@@ -77,7 +77,7 @@
 
           <VuePerfectScrollbar @ps-y-reach-end="onScroll" ref="mainSidebarPs" class="scroll-area--nofications-dropdown p-0 mb-10" :settings="settings">
           <ul @scroll="onScroll" class="bordered-items">
-            <li v-for="(ntf, index) in notifications" :key="ntf.id" @click="markRead(index, ntf.id, ntf.read_at)" class="flex justify-between px-4 py-4 notification cursor-pointer">
+            <li v-for="(ntf, index) in notifications" :key="ntf.id" @click="markRead(index, ntf.id, ntf.read_at); handleN(ntf.data);" class="flex justify-between px-4 py-4 notification cursor-pointer">
               <div class="flex items-start">
                 <feather-icon :icon="ntf.data.icon" :svgClasses="[ntf.read_at == ''?'text-danger':'text-success', 'stroke-current mr-1 h-6 w-6']"></feather-icon>
                 <div class="mx-2">
@@ -131,6 +131,35 @@
 
     </vs-navbar>
   </div>
+  <div class="demo-alignment">
+    <vs-popup class="holamundo" fullscreen title="View Trip" :active.sync="showTrip">
+      <div id="section-to-print">
+        <trip-view :tripData="tripData" v-if="tripData"></trip-view>
+      </div>
+    </vs-popup>
+  </div>
+  <div class="demo-alignment">
+    <vs-popup class="holamundo" :title="transaction.type == 'gexpense'? 'General Expense': transaction.type" v-if="transaction" :active.sync="activePrompt">
+      <table style="width:100%" class="border-collapse">
+        <tr>
+          <td class="p-2 border border-solid d-theme-border-grey-light">Type</td>
+          <td class="p-2 border border-solid d-theme-border-grey-light">{{transaction.type == 'gexpense'? 'General Expense': transaction.type}}</td>
+        </tr>
+        <tr>
+          <td class="p-2 border border-solid d-theme-border-grey-light">Date</td>
+          <td class="p-2 border border-solid d-theme-border-grey-light">{{transaction.created_at | formatDate}}</td>
+        </tr>
+        <tr>
+          <td class="p-2 border border-solid d-theme-border-grey-light">Amount</td>
+          <td class="p-2 border border-solid d-theme-border-grey-light">{{transaction.amount | currency}}</td>
+        </tr>
+        <tr>
+          <td class="p-2 border border-solid d-theme-border-grey-light">Created By</td>
+          <td class="p-2 border border-solid d-theme-border-grey-light">{{transaction.created_by.name}}</td>
+        </tr>
+      </table>
+    </vs-popup>
+  </div>
 </div>
 </template>
 
@@ -138,6 +167,7 @@
 import VxAutoSuggest from '@/components/vx-auto-suggest/VxAutoSuggest.vue';
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import draggable from 'vuedraggable'
+import TripView from '../../views/components/TripView';
 
 export default {
     name: "the-navbar",
@@ -149,11 +179,15 @@ export default {
     },
     data() {
         return {
+            transaction:null,
             take:0,
             navbarSearchAndPinList: this.$store.state.navbarSearchAndPinList,
             searchQuery: '',
             showFullSearch: false,
             unread:0,
+            activePrompt:false,
+            showTrip:false,
+            tripData:null,
             loading:false,
             notifications:[
             ],
@@ -232,6 +266,29 @@ export default {
               })
             this.unread-=1;
           }
+        },
+        handleN(n){
+            if (n.action){
+              console.log(n);
+              if (n.modal === 'trip'){
+                console.log('bd');
+                this.showTripFn(n.action);
+              }
+              if (n.modal == 'transaction'){
+                this.axios.get('transaction/'+n.action)
+                  .then(res => {
+                    this.transaction = res.data;
+                    this.activePrompt = true;
+                  });
+              }
+            }
+        },
+        showTripFn(tripId){
+          this.axios.get('trip/'+tripId)
+            .then(res => {
+              this.tripData = res.data;
+              this.showTrip = true;
+            })
         },
         markAllRead(){
             this.axios.get('mark_all_read')
@@ -372,7 +429,8 @@ export default {
     components: {
         VxAutoSuggest,
         VuePerfectScrollbar,
-        draggable
+        draggable,
+      'trip-view':TripView
     },
 }
 </script>

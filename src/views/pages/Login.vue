@@ -24,28 +24,33 @@
                                     <p>Welcome back, please login to your account.</p>
                                 </div>
                                 <vs-input
+                                  v-on:keyup.enter="login"
                                     name="email"
                                     icon="icon icon-user"
                                     icon-pack="feather"
                                     label-placeholder="Email"
                                     v-model="email"
+                                    v-validate="'required|email'"
                                     class="w-full no-icon-border"/>
+                              <span class="text-danger text-sm" v-show="errors.has('email')">{{ errors.first('email') }}</span>
 
                                 <vs-input
+                                  v-on:keyup.enter="login"
                                     type="password"
                                     name="password"
                                     icon="icon icon-lock"
                                     icon-pack="feather"
                                     label-placeholder="Password"
+                                    v-validate="'required'"
                                     v-model="password"
                                     class="w-full mt-6 no-icon-border" />
+                              <span class="text-danger text-sm" v-show="errors.has('password')">{{ errors.first('password') }}</span>
 
                                 <div class="flex flex-wrap justify-between my-5">
                                     <vs-checkbox v-model="checkbox_remember_me" class="mb-3">Remember Me</vs-checkbox>
                                     <router-link to="/forgot-password">Forgot Password?</router-link>
                                 </div>
-                                <vs-button  type="border">Register</vs-button>
-                                <vs-button class="float-right" @click="login">Login</vs-button>
+                                <vs-button class="float-right mb-3" @click="login">Login</vs-button>
 
                             </div>
                         </div>
@@ -68,12 +73,16 @@
     },
     methods: {
       login(){
-        this.$auth.login({
-          data: {
-            email: this.email,
-            password: this.password
+        this.$validator.validateAll().then(result => {
+          if(result) {
+            this.$auth.login({
+              data: {
+                email: this.email,
+                password: this.password
+              }
+            });
           }
-        });
+        })
       },
     }
   }

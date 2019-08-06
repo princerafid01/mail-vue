@@ -1,7 +1,7 @@
 <template>
   <vx-card title="All trips">
     <h6>Number of rows</h6>
-    <v-select style="margin-bottom: -12px !important;" class="md:w-1/6 mb-base" @input="setMax"  v-model="maxItem" :options="options"></v-select>
+    <v-select style="margin-bottom: -12px !important;" :clearable="false"  class="md:w-1/6 mb-base" @input="setMax"  v-model="maxItem" :options="options"></v-select>
     <vs-table  pagination :max-items="maxItem" search :data="users">
 
       <template slot="thead">

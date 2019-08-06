@@ -75,6 +75,9 @@ export default {
     -webkit-box-shadow: 0 1px 20px 1px #fb434f;
     box-shadow: 0 1px 20px 1px #fb434f;
   }
+  .vs__search, .vs__selected-options, .vs__dropdown-toggle .vs__actions {
+    cursor: pointer;
+  }
   @media print {
     body * {
       visibility: hidden;

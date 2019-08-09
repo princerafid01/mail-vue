@@ -13,7 +13,7 @@
 
         <vx-sidebar :sidebarItems="sidebarItems" :logo="require('@/assets/images/logo/logo.png')" title="NNSL" parent=".layout--main" />
 
-        <div id="content-area" :class="[contentAreaClass, {'show-overlay': bodyOverlay}]">
+        <div id="content-area" :style="{ backgroundImage: 'url(' + bg + ')' }" :class="[contentAreaClass, {'show-overlay': bodyOverlay}]">
 
             <div id="content-overlay"></div>
 
@@ -117,6 +117,12 @@ export default {
         },
     },
     computed: {
+        bg(){
+        if (this.$store.state.theme == 'semi-dark'){
+          return require('@/assets/images/pages/weather.png');
+        } else{
+        }
+        },
         isAppPage() {
             if(this.$route.path.includes('/apps/')) return true
             else return false

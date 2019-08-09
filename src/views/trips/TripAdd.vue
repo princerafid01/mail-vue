@@ -60,7 +60,7 @@
         </div>
       </div>
 
-      <vs-button type="filled" @click.prevent="submitTripForm" class="mt-5 block">Submit</vs-button>
+      <vs-button type="filled" @click.prevent="submitTripForm" :disabled="loading" class="mt-5 block">Submit</vs-button>
     </form>
   </vx-card>
 </template>
@@ -91,6 +91,7 @@
           status:''
         },
         action:'Add Trip',
+        loading:false,
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -131,6 +132,7 @@
       },
       editTrip(tripId){
         this.disabled = true;
+        this.loading = true;
         this.axios.get('trip/'+tripId)
           .then(res => {
             let d = res.data;
@@ -149,6 +151,7 @@
             this.trip.cargo = d.cargo;
             this.trip.cargo_quantity = d.cargo_quantity;
             this.trip.total_fuel = d.total_fuel;
+            this.loading = false;
           })
       },
 

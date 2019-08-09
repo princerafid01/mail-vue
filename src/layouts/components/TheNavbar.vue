@@ -17,42 +17,6 @@
       <!-- SM - OPEN SIDEBAR BUTTON -->
       <feather-icon class="sm:inline-flex xl:hidden cursor-pointer mr-1" icon="MenuIcon" @click.stop="showSidebar"></feather-icon>
 
-      <template v-if="breakpoint != 'md'">
-        <!-- STARRED PAGES - FIRST 10 -->
-        <ul class="vx-navbar__starred-pages">
-          <draggable v-model="starredPagesLimited" :group="{name: 'pinList'}" class="flex cursor-move">
-            <li class="starred-page" v-for="page in starredPagesLimited" :key="page.url">
-              <vx-tooltip :text="page.label" position="bottom" delay=".3s">
-                <feather-icon svgClasses="h-6 w-6" class="p-2 cursor-pointer" :icon="page.labelIcon" @click="$router.push(page.url)"></feather-icon>
-              </vx-tooltip>
-            </li>
-          </draggable>
-        </ul>
-
-        <!-- STARRED PAGES MORE -->
-        <div class="vx-navbar__starred-pages--more-dropdown" v-if="starredPagesMore.length">
-          <vs-dropdown vs-custom-content vs-trigger-click>
-            <feather-icon icon="ChevronDownIcon" svgClasses="h-4 w-4" class="cursor-pointer p-2"></feather-icon>
-            <vs-dropdown-menu>
-              <ul class="vx-navbar__starred-pages-more--list">
-                <draggable v-model="starredPagesMore" :group="{name: 'pinList'}" class="cursor-move">
-                  <li class="starred-page--more flex items-center cursor-pointer" v-for="page in starredPagesMore" :key="page.url" @click="$router.push(page.url)">
-                    <feather-icon svgClasses="h-5 w-5" class="ml-2 mr-1" :icon="page.labelIcon"></feather-icon>
-                    <span class="px-2 pt-2 pb-1">{{ page.label }}</span>
-                  </li>
-                </draggable>
-              </ul>
-            </vs-dropdown-menu>
-          </vs-dropdown>
-        </div>
-
-        <div class="bookmark-container">
-          <feather-icon icon="StarIcon" :svgClasses="['stoke-current text-warning', {'text-white': navbarColor != '#fff'}]" class="cursor-pointer p-2" @click.stop="showBookmarkPagesDropdown = !showBookmarkPagesDropdown" />
-                    <div v-click-outside="outside" class="absolute bookmark-list w-1/3 xl:w-1/4 mt-4" v-if="showBookmarkPagesDropdown">
-          <vx-auto-suggest :autoFocus="true" :data="navbarSearchAndPinList" @selected="selected" @actionClicked="actionClicked" inputClassses="w-full" show-action show-pinned background-overlay></vx-auto-suggest>
-          </div>
-        </div>
-      </template>
 
 
       <vs-spacer></vs-spacer>
@@ -77,7 +41,7 @@
 
           <VuePerfectScrollbar @ps-y-reach-end="onScroll" ref="mainSidebarPs" class="scroll-area--nofications-dropdown p-0 mb-10" :settings="settings">
           <ul @scroll="onScroll" class="bordered-items">
-            <li v-for="(ntf, index) in notifications" :key="ntf.id" @click="markRead(index, ntf.id, ntf.read_at); handleN(ntf.data);" class="flex justify-between px-4 py-4 notification cursor-pointer">
+            <li v-for="(ntf, index) in notifications" :key="ntf.id" @click.once="markRead(index, ntf.id, ntf.read_at); handleN(ntf.data);" class="flex justify-between px-4 py-4 notification cursor-pointer">
               <div class="flex items-start">
                 <feather-icon :icon="ntf.data.icon" :svgClasses="[ntf.read_at == ''?'text-danger':'text-success', 'stroke-current mr-1 h-6 w-6']"></feather-icon>
                 <div class="mx-2">
@@ -259,11 +223,9 @@ export default {
         },
         markRead(index, id,read){
           if (read == null){
-            this.axios.get('mark_read/'+id)
-              .then( res => {
-                this.notifications[index].read_at = 'read'
-              })
+            this.notifications[index].read_at = 'read';
             this.unread-=1;
+            this.axios.get('mark_read/'+id)
           }
         },
         handleN(n){

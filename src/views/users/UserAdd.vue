@@ -42,7 +42,7 @@
         </div>
       </div>
 
-      <vs-button type="filled" @click.prevent="submitForm" class="mt-5 block">Submit</vs-button>
+      <vs-button type="filled" @click.prevent="submitForm" :disabled="loading" class="mt-5 block">Submit</vs-button>
     </form>
   </vx-card>
 </template>
@@ -68,6 +68,7 @@
           notify:'',
         },
         action:'Add User',
+        loading:false,
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -104,6 +105,7 @@
       },
       editUser(Id){
         this.disabled = true;
+        this.loading = true;
         this.axios.get('user/'+Id)
           .then(res => {
             let d = res.data;
@@ -114,6 +116,7 @@
             this.user.name = d.name;
             this.user.email = d.email;
             this.user.phone = d.phone;
+            this.loading = false;
           })
       },
 

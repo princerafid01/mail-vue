@@ -74,6 +74,21 @@
         </vx-card>
       </div>
     <vs-divider v-if="currentTrip"></vs-divider>
+    <div class="vx-row mb-3" style="width: 100%">
+      <h3 class="vx-col md:w-full text-center">Date range filter</h3>
+      <div class="vx-col md:w-1/4">
+        <label class="vs-input--label">Start Date</label>
+        <datepicker class="text-center" input-class="vs-inputx vs-input--input normal" wrapper-class="vs-component vs-con-input-label vs-input mt-5 w-full vs-input-primary"  v-model="startDate"> </datepicker>
+      </div>
+      <div class="vx-col md:w-1/4">
+        <label class="vs-input--label">End date</label>
+        <datepicker class="text-center" input-class="vs-inputx vs-input--input normal" wrapper-class="vs-component vs-con-input-label vs-input mt-5 w-full vs-input-primary"  v-model="endDate"> </datepicker>
+      </div>
+      <div class="vx-col md:w-1/4">
+        <vs-button type="filled" @click.prevent="update"  style="margin-top: 37px !important;" class="mt-5 block">Filter</vs-button>
+      </div>
+    </div>
+
     <!-- Background Color -->
     <div class="vx-col w-full md:w-1/4 mb-base">
       <vx-card
@@ -116,7 +131,59 @@
         <h3 class="text-white text-center">{{totalProfit|currency}}</h3>
       </vx-card>
     </div>
-
+    <div class="vx-col w-full md:w-1/4 mb-base">
+      <vx-card
+        title="Total General Expense"
+        subtitle="Total from all trip till now"
+        title-color="#fff"
+        card-background="success"
+        content-color="#fff">
+        <h3 class="text-white text-center">{{totalGExpense|currency}}</h3>
+      </vx-card>
+    </div>
+    <div class="demo-alignment">
+      <div id="section-to-print" class="only_print">
+        <vs-row>
+          <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
+            <h2 class="text-center">Noble Navigation and Shipping Line</h2>
+          </vs-col>
+          <vs-col vs-type="flex" vs-justify="center" class="mb-2" vs-align="center" vs-w="12">
+            <h4 class="text-center">Summary ({{ startDate | formatDate}} - {{ endDate |formatDate}} )</h4>
+          </vs-col>
+          <vs-col class="mb-2" vs-w="12">
+            <hr/>
+          </vs-col>
+          <vs-col vs-offset="3" vs-w="6">
+            <table class="border-collapse" style="width: 100%" >
+              <tr class="p-2 border border-solid  d-theme-border-grey-light">
+                <td><b class="uppercase strong black-text">Total trip</b></td>
+                <td>{{totalTrip}}</td>
+              </tr>
+              <tr class="p-2 border border-solid  d-theme-border-grey-light">
+                <td><b class="uppercase strong black-text">Total Income</b></td>
+                <td>{{totalIncome | currency}}</td>
+              </tr>
+              <tr class="p-2 border border-solid  d-theme-border-grey-light">
+                <td><b class="uppercase strong black-text">Total Expense</b></td>
+                <td>{{totalExpense | currency}}</td>
+              </tr>
+              <tr class="p-2 border border-solid  d-theme-border-grey-light">
+                <td><b class="uppercase strong black-text">Total Profit</b></td>
+                <td>{{totalProfit | currency}}</td>
+              </tr>
+              <tr class="p-2 border border-solid  d-theme-border-grey-light">
+                <td><b class="uppercase strong black-text">Total General Expense</b></td>
+                <td>{{totalGExpense| currency}}</td>
+              </tr>
+              <tr class="p-2 border border-solid  d-theme-border-grey-light">
+                <td><b class="uppercase strong black-text">Total Net Profit</b></td>
+                <td>{{totalProfit - totalGExpense | currency}}</td>
+              </tr>
+            </table>
+          </vs-col>
+        </vs-row>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -124,6 +191,8 @@
   export default {
     data(){
       return {
+        endDate:'',
+        startDate:'',
         totalExpense:'loading',
         totalTrip:'loading',
         totalIncome:'loading',
@@ -192,13 +261,16 @@
       }
       ,
       update(){
-        this.axios.get('/home')
+        this.axios.get('/home', {params:{start_date:this.$options.filters.dateToString(this.startDate),end_date:this.$options.filters.dateToString(this.endDate)}})
           .then(res => {
             this.totalTrip = res.data.total_trip;
             this.totalIncome = res.data.total_income;
             this.totalExpense = res.data.total_expense;
+            this.totalGExpense = res.data.total_gexpense;
             this.totalProfit = res.data.total_profit;
             this.currentTrip = res.data.current_trip;
+            this.startDate = new Date(res.data.start_date);
+            this.endDate = new Date(res.data.end_date);
           })
       }
     },
@@ -210,3 +282,17 @@
     }
   }
 </script>
+<style scoped>
+
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px 0px 10px 0px;
+  }
+
+  th, td {
+    /*text-align: center;*/
+    padding: 2px;
+  }
+</style>

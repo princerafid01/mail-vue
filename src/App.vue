@@ -78,9 +78,9 @@ export default {
   .vs__search, .vs__selected-options, .vs__dropdown-toggle .vs__actions {
     cursor: pointer;
   }
-  /*.only_print{*/
-    /*display: none;*/
-  /*}*/
+  .only_print{
+    display: none;
+  }
   @media print {
     .vs-content-sidebar, .parentx {
       display: none;

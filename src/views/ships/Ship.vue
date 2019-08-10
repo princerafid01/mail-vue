@@ -65,6 +65,44 @@
       </div>
       </div>
     </vx-card>
+    <div class="demo-alignment">
+    <div id="section-to-print" class="only_print">
+      <vs-row>
+        <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
+          <h2 class="text-center">Noble Navigation and Shipping Line</h2>
+        </vs-col>
+        <vs-col vs-type="flex" vs-justify="center" class="mb-2" vs-align="center" vs-w="12">
+          <h4 class="text-center">{{$route.meta.pageTitle}}</h4>
+        </vs-col>
+        <vs-col vs-type="flex" vs-justify="center" class="mb-2" vs-align="center" vs-w="12">
+          <h4 class="text-center">Trip Summary ({{ startDate | formatDate}} - {{ endDate |formatDate}} )</h4>
+        </vs-col>
+        <vs-col class="mb-2" vs-w="12">
+          <hr/>
+        </vs-col>
+        <vs-col vs-offset="3" vs-w="6">
+          <table class="border-collapse" style="width: 100%" >
+            <tr class="p-2 border border-solid  d-theme-border-grey-light">
+              <td><b class="uppercase strong black-text">Total trip</b></td>
+              <td>{{totalTrip}}</td>
+            </tr>
+            <tr class="p-2 border border-solid  d-theme-border-grey-light">
+              <td><b class="uppercase strong black-text">Total Income</b></td>
+              <td>{{totalIncome | currency}}</td>
+            </tr>
+            <tr class="p-2 border border-solid  d-theme-border-grey-light">
+              <td><b class="uppercase strong black-text">Total Expense</b></td>
+              <td>{{totalExpense | currency}}</td>
+            </tr>
+            <tr class="p-2 border border-solid  d-theme-border-grey-light">
+              <td><b class="uppercase strong black-text">Total Profit</b></td>
+              <td>{{totalProfit}}</td>
+            </tr>
+          </table>
+        </vs-col>
+      </vs-row>
+    </div>
+    </div>
   </div>
 </template>
 <script>
@@ -85,6 +123,7 @@
         totalIncome:'',
         totalExpense:'',
         totalProfit:'',
+        printt:false,
         themeColors: ['#7367F0', '#28C76F', '#EA5455', '#FF9F43', '#1E1E1E'],
         lineAreaChartSpline: {
           series: [],
@@ -141,3 +180,17 @@
     }
   }
 </script>
+<style scoped>
+
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px 0px 10px 0px;
+  }
+
+  th, td {
+    /*text-align: center;*/
+    padding: 2px;
+  }
+</style>

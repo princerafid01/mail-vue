@@ -82,6 +82,7 @@
             <th>Date</th>
             <th>Detail</th>
             <th>Amount</th>
+            <th class="no_print">Action</th>
           </tr>
           </thead>
         <tbody>
@@ -89,6 +90,7 @@
           <td>{{ex.created_at | formatDate}}</td>
           <td>{{ex.detail}}</td>
           <td>{{ex.amount | currency}}</td>
+          <td class="no_print"><vs-button size="small" @click="edit(ex.id)" style="padding: 5px"><vs-icon icon="edit"></vs-icon></vs-button></td>
         </tr>
         <tr class="p-2 border border-solid d-theme-border-grey-light">
           <td colspan="3" class="text-right">Total = {{tripData.expense | currency}}</td>
@@ -105,6 +107,7 @@
           <th>Date</th>
           <th>Detail</th>
           <th>Amount</th>
+          <th class="no_print">Action</th>
         </tr>
         </thead>
         <tbody>
@@ -112,6 +115,7 @@
           <td>{{ex.created_at | formatDate}}</td>
           <td>{{ex.detail}}</td>
           <td>{{ex.amount | currency}}</td>
+          <td class="no_print"><vs-button size="small" @click="edit(ex.id)" style="padding: 5px"><vs-icon icon="edit"></vs-icon></vs-button></td>
         </tr>
         <tr class="p-2 border border-solid  d-theme-border-grey-light">
           <td colspan="3" class="text-right">Total = {{tripData.income | currency}}</td>
@@ -142,11 +146,88 @@
         </tbody>
       </table>
     </vs-col>
+      <vs-popup :title="action" style="z-index: 500000" :active.sync="popupActive2">
+        <vx-input-group class="mb-base">
+          <datepicker v-if="$auth.check(['date'])" class="text-center" v-model="transactionForm.date"> </datepicker>
+        </vx-input-group>
+        <vx-input-group class="mb-base">
+          <vs-input  label="Details" v-validate="'required'"  name="detail" v-model="transactionForm.detail" placeholder="Detail" />
+          <span class="text-danger text-sm" v-show="errors.has('detail')">{{ errors.first('detail') }}</span>
+        </vx-input-group>
+        <vx-input-group class="mb-base">
+          <vs-input v-validate="'required|decimal'"  name="amount" label="Amount"v-model="transactionForm.amount"  placeholder="Amount" />
+          <span class="text-danger text-sm" v-show="errors.has('amount')">{{ errors.first('amount') }}</span>
+        </vx-input-group>
+        <vs-button type="filled" @click.prevent="submitForm" class="mt-5 block">Save</vs-button>
+      </vs-popup>
   </vs-row>
 </template>
 <script>
+  import Datepicker from 'vuejs-datepicker';
   export default {
-    props:['tripData']
+    props:['tripData'],
+    data(){
+      return {
+        transactionForm:{
+          id:'',
+          date: '',
+          detail:'',
+          amount:'',
+        },
+        popupActive2: false,
+        action:'Edit',
+      }
+    },
+    methods:{
+      submitForm() {
+        this.$validator.validateAll().then(result => {
+          if(result) {
+            this.popupActive2 = false;
+            this.transactionForm.date = this.$options.filters.dateToString(this.transactionForm.date);
+            this.axios.post('transaction/'+this.transactionForm.id,this.transactionForm)
+              .then(res => {
+                if (res.data.notify){
+                  this.$vs.notify({
+                    title:res.data.notify.title,
+                    text:res.data.notify.message,
+                    color:res.data.notify.type
+                  })
+                }
+                if (res.data.status == 'success') {
+                  this.transactionForm = {
+                    id:'',
+                    date: '',
+                    detail:'',
+                    amount:'',
+                  }
+                }
+                this.update();
+              })
+          }else{
+          }
+        })
+      },
+      edit(id){
+        this.axios.get('transaction/'+id)
+          .then(res => {
+            this.transactionForm.id = id;
+            this.transactionForm.date = new Date(res.data.created_at);
+            this.transactionForm.detail = res.data.detail;
+            this.transactionForm.amount = res.data.amount;
+            this.action = res.data.type;
+            this.popupActive2 = true;
+          });
+      },
+      update(){
+        this.axios.get('trip/'+this.tripData.id)
+          .then(res => {
+            this.tripData = res.data;
+          })
+      }
+    },
+    components: {
+      Datepicker,
+    },
   }
 </script>
 <style scoped>

@@ -78,19 +78,35 @@ export default {
   .vs__search, .vs__selected-options, .vs__dropdown-toggle .vs__actions {
     cursor: pointer;
   }
+  /*.only_print{*/
+    /*display: none;*/
+  /*}*/
   @media print {
+    .vs-content-sidebar, .parentx {
+      display: none;
+    }
+    #content-area {
+      margin-left: 10px !important;
+    }
     body * {
       visibility: hidden;
     }
     #section-to-print, #section-to-print * {
       visibility: visible;
     }
+    .only_print{
+      display: initial;
+    }
+    .no_print{
+      display: none;
+    }
     #section-to-print {
       position: absolute;
       left: 0;
       top: 0;
-      size: A4;
+      /*size: A4;*/
       background: white;
+      margin: 0;
     }
   }
 </style>

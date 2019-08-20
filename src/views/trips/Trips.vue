@@ -21,34 +21,34 @@
         <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
 
           <vs-td :data="data[indextr].number">
-            {{data[indextr].number}}
+            <span  @click="showTripFn(data[indextr].id)">{{data[indextr].number}}</span>
           </vs-td>
 
           <vs-td :data="data[indextr].ship">
-            {{data[indextr].ship}}
+            <span  @click="showTripFn(data[indextr].id)">{{data[indextr].ship}}</span>
           </vs-td>
 
           <vs-td :data="data[indextr].type">
-            {{data[indextr].type}}
+            <span  @click="showTripFn(data[indextr].id)">{{data[indextr].type}}</span>
           </vs-td>
 
           <vs-td :data="data[indextr].start_date">
-            {{data[indextr].start_date | formatDate}}
+            <span  @click="showTripFn(data[indextr].id)"> {{data[indextr].start_date | formatDate}}</span>
           </vs-td>
           <vs-td :data="data[indextr].status">
-            {{data[indextr].status}}
+            <span  @click="showTripFn(data[indextr].id)">{{data[indextr].status}}</span>
           </vs-td>
           <vs-td :data="data[indextr].created_by">
-            {{data[indextr].created_by}}
+            <span  @click="showTripFn(data[indextr].id)">{{data[indextr].created_by}}</span>
           </vs-td>
           <vs-td :data="data[indextr].income">
-            {{data[indextr].income|currency}}
+            <span  @click="showTripFn(data[indextr].id)">{{data[indextr].income|currency}}</span>
           </vs-td>
           <vs-td :data="data[indextr].expense">
-            {{data[indextr].expense|currency}}
+            <span  @click="showTripFn(data[indextr].id)">{{data[indextr].expense|currency}}</span>
           </vs-td>
           <vs-td :data="data[indextr].profit">
-            {{data[indextr].profit|currency}}
+            <span  @click="showTripFn(data[indextr].id)">{{data[indextr].profit|currency}}</span>
           </vs-td>
           <vs-td :data="data[indextr].id">
             <vs-dropdown color="success" style="cursor: pointer" vs-trigger-click>
@@ -233,6 +233,11 @@
     },
     mounted(){
       this.update();
+      Echo.connector.pusher.config.auth.headers['Authorization'] = 'Bearer '+this.$auth.token();
+      Echo.private('App.User.' + this.$auth.user().id)
+        .notification((notification) => {
+          this.update();
+        });
     },
     components: {
       Datepicker,

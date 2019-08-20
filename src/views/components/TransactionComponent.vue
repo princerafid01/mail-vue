@@ -301,7 +301,6 @@
                 })
               }
               this.update();
-
             })
         }else{
           this.$vs.notify({
@@ -342,6 +341,11 @@
     },
     mounted(){
       this.update();
+      Echo.connector.pusher.config.auth.headers['Authorization'] = 'Bearer '+this.$auth.token();
+      Echo.private('App.User.' + this.$auth.user().id)
+        .notification((notification) => {
+          this.update();
+        });
     },
     components: {
       Datepicker,

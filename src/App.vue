@@ -90,6 +90,7 @@ export default {
     }
     body * {
       visibility: hidden;
+      color: black;
     }
     #section-to-print, #section-to-print * {
       visibility: visible;
@@ -107,6 +108,7 @@ export default {
       /*size: A4;*/
       background: white;
       margin: 0;
+      color: black;
     }
   }
 </style>

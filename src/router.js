@@ -123,6 +123,24 @@ const router = new Router({
             component: () => import('./views/transaction/Transaction.vue')
           },
           {
+            path: '/gexpense/print',
+            name: 'General_Expense_Print',
+            meta: {
+              auth: {
+                roles: 'gexpense_view',
+                forbiddenRedirect: '/403'
+              },
+              type:'gexpense',
+              breadcrumb: [
+                { title: 'Home', url: '/' },
+                { title: 'Trips', url: '/trips' },
+                { title: 'General Expense/Print', active: true },
+              ],
+              pageTitle: 'General Expense Print',
+            },
+            component: () => import('./views/components/MonthlyExpensePrintView')
+          },
+          {
             path: '/trip/add',
             name: 'Add Trip',
             meta: {

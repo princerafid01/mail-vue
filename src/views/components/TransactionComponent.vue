@@ -133,11 +133,6 @@
 
       </vs-popup>
     </div>
-    <div class="demo-alignment">
-      <vs-popup class="holamundo" fullscreen title="Print" :active.sync="printExpense">
-          <monthly-expense-print-view v-if="printExpense" :data="printData"></monthly-expense-print-view>
-      </vs-popup>
-    </div>
       <vs-button v-if="type=='gexpense'" @click="addGexpenseForm" class="floating-btn" color="success" type="gradient" icon-pack="feather" icon="icon-plus"></vs-button>
   </div>
 </template>
@@ -188,8 +183,9 @@
     },
     methods: {
       print(index){
-          this.printExpense = true;
-          this.printData = this.monthlyData[index];
+        var data = this.monthlyData[index];
+          this.$router.push({ name: 'General_Expense_Print', params: { data: data } });
+          // this.printData = this.monthlyData[index];
       },
       submitForm() {
         this.$validator.validateAll().then(result => {

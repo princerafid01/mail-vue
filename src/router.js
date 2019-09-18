@@ -37,6 +37,14 @@ const router = new Router({
         path: '',
         component: () => import('./layouts/main/Main.vue'),
         children: [
+          {
+            path: '/email',
+            name: 'email',
+            component: () => import('./views/email/Email.vue'),
+            meta: {
+              rule: 'editor'
+            }
+          },
       // =============================================================================
       // Theme Routes
       // =============================================================================

@@ -82,7 +82,7 @@
           </div>
           <vs-dropdown-menu class="vx-navbar-dropdown">
             <ul style="min-width: 9rem">
-              <li class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white" @click="$router.push('/apps/email')"><feather-icon icon="MailIcon" svgClasses="w-4 h-4"></feather-icon> <span class="ml-2">Inbox</span></li>
+              <li class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white" @click="$router.push('/email')"><feather-icon icon="MailIcon" svgClasses="w-4 h-4"></feather-icon> <span class="ml-2">Inbox</span></li>
               <li class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white" v-if="$store.state.theme == 'semi-dark'" @click="setTheme('dark')"><feather-icon icon="MoonIcon" svgClasses="w-4 h-4"></feather-icon> <span class="ml-2">Dark</span></li>
               <li class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white" v-if="$store.state.theme == 'dark'"  @click="setTheme('semi-dark')"><feather-icon icon="SunIcon" svgClasses="w-4 h-4"></feather-icon> <span class="ml-2">Light</span></li>
               <vs-divider class="m-1"></vs-divider>

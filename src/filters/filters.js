@@ -72,7 +72,10 @@ Vue.filter('month', function(val, showYear = true) {
 })
 
 Vue.filter('csv', function(value) {
-	return value.join(', ')
+	value = Array.prototype.slice.call(value);
+	if(value){
+		return value.join(', ')
+	}
 })
 
 Vue.filter('filter_tags', function(value) {

@@ -25,13 +25,14 @@
             :is-valid="validateForm"
             :active.sync="activePrompt">
                 <VuePerfectScrollbar class="scroll-area p-4" :settings="settings">
-                    <form @submit.prevent>
+                    <form @submit.prevent="sendMail">
                         <vs-input v-validate="'required|email'" name="mailTo" label-placeholder="To" v-model="mailTo" class="w-full mb-6" :danger="!validateForm && mailTo != ''" val-icon-danger="clear" :success="validateForm" val-icon-success="done" :color="validateForm ? 'success' : 'danger'" />
                         <vs-input name="mailSubject" label-placeholder="Subject" v-model="mailSubject" class="w-full mb-6" />
                         <vs-input name="mailCC" label-placeholder="CC" v-model="mailCC" class="w-full mb-6" />
                         <vs-input name="mailBCC" label-placeholder="BCC" v-model="mailBCC" class="w-full mb-6" />
                         <quill-editor v-model="mailMessage" :options="editorOption"></quill-editor>
-                        <vs-upload multiple text="Attachments" :show-upload-button="false" />
+                        <vs-upload :action="/sendMail" :data="{image_files}" fileName="image_files"  multiple text="Attachments" :show-upload-button="false" />
+                        <vs-button size="large" class="bg-primary-gradient w-full" icon-pack="feather" icon="icon-send">Send</vs-button>
                     </form>
                 </VuePerfectScrollbar>
       </vs-popup>
@@ -123,6 +124,7 @@ export default{
             mailCC: '',
             mailBCC: '',
             mailMessage: '',
+            sendButton:false,
             editorOption: {
                 modules: {
                     toolbar: [['bold', 'italic', 'underline', 'strike', 'link', 'blockquote', 'code-block'], [{ 'header': 1 }, { 'header': 2 }], [{ 'list': 'ordered'}, { 'list': 'bullet' }], [{ 'font': [] }],],
@@ -137,6 +139,7 @@ export default{
     },
     computed: {
         validateForm() {
+            this.sendButton =true;
             return !this.errors.any() && this.mailTo != '';
         },
         unreadMails() {
@@ -162,7 +165,24 @@ export default{
             this.mailBCC = '';
             this.mailMessage = '';
         },
-        sendMail() {},
+        sendMail() {
+            console.log(image_files);
+            if(!this.errors.any() && this.mailTo != ''){
+
+                let mail = {
+                    mailTo : this.mailTo,
+                    mailSubject : this.mailSubject,
+                    mailCc : this.mailCC,
+                    mailBcc : this.mailBCC,
+                    mailMessage : this.mailMessage,
+                } 
+                this.axios.post('/sendMail',mail)
+                .then(({data}) => {
+                    console.log(data);
+                })
+            }
+
+        },
     },
     components: {
         quillEditor,

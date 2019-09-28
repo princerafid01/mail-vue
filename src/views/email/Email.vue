@@ -175,7 +175,10 @@ export default{
         updateOpenMail(mailId) {
             this.openMailId = mailId;
             const payload = {mails: [mailId], unread: false};
-            this.$store.dispatch('email/updateMailUnread', payload);
+            this.axios.get(`/mailRead/${mailId}`) // Make Email unread in database
+                .then((data) => {
+                    this.$store.dispatch('email/updateMailUnread', payload);
+                })
             this.isSidebarActive = true;
         },
         addToSelectedMails(mailId) {
@@ -257,6 +260,13 @@ export default{
         EmailSidebar,
         EmailView,
         VuePerfectScrollbar
+    },
+    mounted(){
+        this.axios.get('test/email')
+            .then(({data}) => {
+                console.table(data);
+              this.$store.commit('email/UPDATE_MAILS', data);
+            });
     },
     created() {
         this.$nextTick(() => {

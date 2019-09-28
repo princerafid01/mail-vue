@@ -8,10 +8,10 @@
 ==========================================================================================*/
 
 
-import emails from '@/views/email/mails'
+// import emails from '@/views/email/mails'
 
 export default {
-    mails: emails,
+    mails: [],
     mail_filter: 'inbox',
     mailTags: [
         { text: 'Personal', value : 'personal', color:"success"},

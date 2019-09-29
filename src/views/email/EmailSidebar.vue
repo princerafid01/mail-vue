@@ -31,7 +31,7 @@
                         <vs-input name="mailCC" label-placeholder="CC" v-model="mailCC" class="w-full mb-6" />
                         <vs-input name="mailBCC" label-placeholder="BCC" v-model="mailBCC" class="w-full mb-6" />
                         <quill-editor v-model="mailMessage" :options="editorOption"></quill-editor>
-                        <vs-upload :action="/sendMail" :data="{image_files}" fileName="image_files"  multiple text="Attachments" :show-upload-button="false" />
+                        <vs-upload action="/sendMail" :data="{image_files}" fileName="image_files"  multiple text="Attachments" :show-upload-button="false" />
                         <vs-button size="large" class="bg-primary-gradient w-full" icon-pack="feather" icon="icon-send">Send</vs-button>
                     </form>
                 </VuePerfectScrollbar>

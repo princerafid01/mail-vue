@@ -25,14 +25,14 @@
             :is-valid="validateForm"
             :active.sync="activePrompt">
                 <VuePerfectScrollbar class="scroll-area p-4" :settings="settings">
-                    <form @submit.prevent="sendMail">
+                    <form @submit.prevent="sendMail" enctype="multipart/form-data" method="post">
                         <vs-input v-validate="'required|email'" name="mailTo" label-placeholder="To" v-model="mailTo" class="w-full mb-6" :danger="!validateForm && mailTo != ''" val-icon-danger="clear" :success="validateForm" val-icon-success="done" :color="validateForm ? 'success' : 'danger'" />
                         <vs-input name="mailSubject" label-placeholder="Subject" v-model="mailSubject" class="w-full mb-6" />
                         <vs-input name="mailCC" label-placeholder="CC" v-model="mailCC" class="w-full mb-6" />
                         <vs-input name="mailBCC" label-placeholder="BCC" v-model="mailBCC" class="w-full mb-6" />
                         <quill-editor v-model="mailMessage" :options="editorOption"></quill-editor>
-                        <vs-upload action="/sendMail" :data="{image_files}" fileName="image_files"  multiple text="Attachments" :show-upload-button="false" />
-                        <vs-button size="large" class="bg-primary-gradient w-full" icon-pack="feather" icon="icon-send">Send</vs-button>
+                        <vs-upload @change="catchAttachment"    multiple text="Attachments" :show-upload-button="false" />
+                        <vs-button  size="large" class="bg-primary-gradient w-full" icon-pack="feather" icon="icon-send">Send</vs-button>
                     </form>
                 </VuePerfectScrollbar>
       </vs-popup>
@@ -124,6 +124,7 @@ export default{
             mailCC: '',
             mailBCC: '',
             mailMessage: '',
+            attachments:[],
             sendButton:false,
             editorOption: {
                 modules: {
@@ -150,6 +151,10 @@ export default{
         },
     },
     methods: {
+        catchAttachment(e,values){
+            // console.log(values)
+            this.attachments.push(values);
+        },
       show_form(){
         this.activePrompt = true;
       },
@@ -166,17 +171,19 @@ export default{
             this.mailMessage = '';
         },
         sendMail() {
-            console.log(image_files);
+            this.axios.defaults.headers.post['Content-Type'] = 'multipart/form-data';
             if(!this.errors.any() && this.mailTo != ''){
-
-                let mail = {
-                    mailTo : this.mailTo,
-                    mailSubject : this.mailSubject,
-                    mailCc : this.mailCC,
-                    mailBcc : this.mailBCC,
-                    mailMessage : this.mailMessage,
-                } 
-                this.axios.post('/sendMail',mail)
+                let data = new FormData(); 
+                console.log(this.attachments[0]);
+                this.attachments[0].forEach(file => {
+                    data.append('file[]', file);
+                });
+                data.append('mailTo' , this.mailTo);
+                data.append('mailSubject', this.mailSubject);
+                data.append('mailCc', this.mailCC);
+                data.append('mailBCC', this.mailBCC);
+                data.append('mailMessage', this.mailMessage);
+                this.axios.post('/sendMail', data)
                 .then(({data}) => {
                     console.log(data);
                 })

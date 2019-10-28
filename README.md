@@ -1,26 +1,3 @@
-# modern
+A vuejs spa solution for a full fedge mail application. Look at a quick demo https://nnslbd.com/email 
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
+enjoy :coffee:
